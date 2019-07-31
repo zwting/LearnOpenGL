@@ -1,4 +1,5 @@
 **/*.swp
-**/x64
+/x64
+/LearnOpenGL/x64
 **/Debug
 /.vs
