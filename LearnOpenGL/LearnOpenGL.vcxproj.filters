@@ -16,6 +16,9 @@
     <Filter Include="源文件\lib">
       <UniqueIdentifier>{6f7a7ce1-1ba6-4b69-ae7a-e6d32fdef69b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{09f329ce-3ea4-4c4b-a1d5-f4ac516441ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
