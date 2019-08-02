@@ -157,8 +157,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="commons\CommonUtils.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="graphic\Shader.cpp" />
     <ClCompile Include="third_part\src\glad.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragment.glsl" />
+    <None Include="shaders\vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="commons\CommonUtils.h" />
+    <ClInclude Include="graphic\Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

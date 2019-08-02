@@ -17,7 +17,10 @@
       <UniqueIdentifier>{6f7a7ce1-1ba6-4b69-ae7a-e6d32fdef69b}</UniqueIdentifier>
     </Filter>
     <Filter Include="shaders">
-      <UniqueIdentifier>{09f329ce-3ea4-4c4b-a1d5-f4ac516441ff}</UniqueIdentifier>
+      <UniqueIdentifier>{96b85e85-c506-465c-a08c-e68af7655a2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\common">
+      <UniqueIdentifier>{50d9b6b1-eaf2-4a3c-a6ee-6fbeeca1f0fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,5 +30,25 @@
     <ClCompile Include="third_part\src\glad.c">
       <Filter>源文件\lib</Filter>
     </ClCompile>
+    <ClCompile Include="commons\CommonUtils.cpp">
+      <Filter>源文件\common</Filter>
+    </ClCompile>
+    <ClCompile Include="graphic\Shader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\fragment.glsl" />
+    <None Include="shaders\vertex.glsl">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="commons\CommonUtils.h">
+      <Filter>源文件\common</Filter>
+    </ClInclude>
+    <ClInclude Include="graphic\Shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

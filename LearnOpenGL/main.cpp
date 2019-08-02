@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include "graphic/Shader.h"
 
 GLFWwindow* g_win;
 void FrameBufferSizeCallback(GLFWwindow* window, int width, int height);
@@ -13,19 +14,24 @@ void Update(float dt);
 const unsigned int SCREEN_WIDTH = 800;
 const unsigned int SCREEN_HEIGHT = 600;
 
-unsigned int vertexShader;
-unsigned int fragmentShader;
+Shader *g_pShader;
 
 float vertices[] = {
 	-0.5f, -0.5f, 0.0f,
 	0.5f, -0.5f, 0.0f,
-	0.0f ,0.5f,0.0f
+	0.0f, 0.5f, 0.0f
 };
+
+void InitData();
+
+void CleanData();
 
 int main()
 {
-	if(InitGLFW() == -1)
+	if (InitGLFW() == -1)
 		return -1;
+
+	InitData();
 
 	while (!glfwWindowShouldClose(g_win))
 	{
@@ -42,6 +48,7 @@ int main()
 		glfwPollEvents();
 	}
 
+	CleanData();
 	glfwTerminate();
 	return 0;
 }
@@ -53,13 +60,24 @@ void Render()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, )
+	g_pShader->Use();
+		
 }
 
 void Update(float dt)
 {
+}
 
+//初始化数据
+void InitData()
+{
+	g_pShader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
+}
+
+//清理数据
+void CleanData()
+{
+	delete g_pShader;
 }
 
 void FrameBufferSizeCallback(GLFWwindow* window, int width, int height)
@@ -101,5 +119,3 @@ int InitGLFW()
 	}
 	return 0;
 }
-
-
