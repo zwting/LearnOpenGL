@@ -1,25 +1,40 @@
 #pragma once
 #include <string>
 #include <glad/glad.h>
+#include "Texture.h"
 
 class Shader
 {
 private:
 	std::string _vertexSrc;
 	std::string _fragSrc;
-	std::string _geoSrc;
+	GLuint _textureList[16];
+	int _textureLengh;
 
 	GLuint _vertexID;
 	GLuint _fragmentID;
-	GLuint _geometryID;
 	GLuint _program;
 
+public:
+	GLuint program() const
+	{
+		return _program;
+	}
+
+private:
 	char _logBuffer[256];
 
 private:
 	bool Compile(GLuint shaderID, const char* src);
 public:
-	Shader(const char* vertexPath, const char* fragPath, const char* geoPath = nullptr);
-	void Use();
+	Shader(const char* vertexPath, const char* fragPath);
+	void AddTexture(const Texture* texture);
 
+	void Use() const;
+
+	//下面是设置uniform的方法
+	void SetVec4(const char* variable, float x, float y, float z, float w = 1.0f) const;
+	void SetFloat(const char* variable, float val) const;
+	void SetInt(const char* variable, int val) const;
+	void SetMat4vf(const char* variable, const GLfloat* val)const;
 };

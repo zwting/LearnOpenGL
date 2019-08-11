@@ -4,46 +4,41 @@
 #include <fstream>
 #include <iostream>
 
-Shader::Shader(const char* vertexPath, const char* fragPath, const char* geoPath)
+Shader::Shader(const char* vertexPath, const char* fragPath)
 {
 	assert(vertexPath && fragPath);
 
-	std::fstream vertexStream(vertexPath);
-	std::fstream fragStream(fragPath);
-	std::stringstream vertexBuffer;
-	std::stringstream fragBuffer;
-
-	vertexBuffer << vertexStream.rdbuf();
-	_vertexSrc = vertexBuffer.str();
-	vertexStream.close();
-
-	fragBuffer << fragStream.rdbuf();
-	_fragSrc = fragBuffer.str();
-	fragStream.close();
-
-	if (geoPath)
+	try
 	{
-		std::fstream geoStream(geoPath);
-		std::stringstream geoBuffer;
-		geoBuffer << geoStream.rdbuf();
-		_geoSrc = geoBuffer.str();
-		geoStream.close();
+		std::fstream vertexStream(vertexPath, std::ios_base::in);
+		std::fstream fragStream(fragPath, std::ios_base::in);
+		std::stringstream vertexBuffer;
+		std::stringstream fragBuffer;
 
-		_geometryID = glCreateShader(GL_GEOMETRY_SHADER);
+		vertexBuffer << vertexStream.rdbuf();
+		_vertexSrc = vertexBuffer.str();
+		vertexStream.close();
+
+		fragBuffer << fragStream.rdbuf();
+		_fragSrc = fragBuffer.str();
+		fragStream.close();
+	}
+	catch (std::ifstream::failure e)
+	{
+		std::cout << "Error: shader file not successfuly read" << std::endl;
 	}
 
 	_vertexID = glCreateShader(GL_VERTEX_SHADER);
-	_fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
-
-
-	_program = glCreateProgram();
 	const GLchar* vertexCSrc = _vertexSrc.c_str();
 	if (!Compile(_vertexID, vertexCSrc))
 		return;
 
+	_fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
 	const GLchar* fragmentSrc = _fragSrc.c_str();
 	if (!Compile(_fragmentID, fragmentSrc))
 		return;
+
+	_program = glCreateProgram();
 
 	glAttachShader(_program, _vertexID);
 	glAttachShader(_program, _fragmentID);
@@ -55,27 +50,73 @@ Shader::Shader(const char* vertexPath, const char* fragPath, const char* geoPath
 	{
 		memset(_logBuffer, 0, sizeof(_logBuffer));
 		glGetProgramInfoLog(_program, sizeof(_logBuffer) / sizeof(char), nullptr, _logBuffer);
+		std::cout << "Error: Shader program linking failed:\n" << _logBuffer << std::endl;
 		return;
 	}
 
 	glDeleteShader(_vertexID);
 	glDeleteShader(_fragmentID);
+
+	_textureLengh = 0;
 }
 
-void Shader::Use()
+void Shader::AddTexture(const Texture* texture)
+{
+	assert(texture);
+
+	_textureList[_textureLengh] = texture->id();
+	_textureLengh++;
+}
+
+void Shader::Use() const
 {
 	glUseProgram(_program);
+	char textureName[64];
+	for (int i = 0; i <= _textureLengh; ++i)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, _textureList[i]);
+		memset(textureName, 0, sizeof(textureName));
+		sprintf_s(textureName, "texture%d", i);
+		SetInt(textureName, i);
+	}
 }
+
+void Shader::SetVec4(const char* variable, GLfloat x, GLfloat y, GLfloat z, GLfloat w) const
+{
+	GLint location = glGetUniformLocation(this->_program, variable);
+	glUniform4f(location, x, y, z, w);
+}
+
+void Shader::SetFloat(const char* variable, float val) const
+
+{
+	GLint location = glGetUniformLocation(this->_program, variable);
+	glUniform1f(location, val);
+}
+
+void Shader::SetInt(const char* variable, int val) const
+{
+	GLint location = glGetUniformLocation(this->_program, variable);
+	glUniform1i(location, val);
+}
+
+void Shader::SetMat4vf(const char* variable, const GLfloat* val) const
+{
+	GLint location = glGetUniformLocation(this->_program, variable);
+	glUniformMatrix4fv(location, 1, GL_FALSE, val);
+}
+
 
 bool Shader::Compile(GLuint shaderID, const char* src)
 {
-	glShaderSource(_vertexID, 1, &src, nullptr);
+	glShaderSource(shaderID, 1, &src, nullptr);
 
 	glCompileShader(shaderID);
 	int success;
 	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &success);
 
-	if(!success)
+	if (!success)
 	{
 		memset(_logBuffer, 0, sizeof(_logBuffer));
 		glGetShaderInfoLog(shaderID, sizeof(_logBuffer) / sizeof(char), nullptr, _logBuffer);
