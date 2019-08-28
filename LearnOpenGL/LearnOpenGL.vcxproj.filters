@@ -44,19 +44,13 @@
     <ClCompile Include="commons\CommonUtils.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="commons\Vec3.cpp">
-      <Filter>src\common</Filter>
-    </ClCompile>
     <ClCompile Include="graphic\Texture.cpp">
       <Filter>src\graphic</Filter>
     </ClCompile>
     <ClCompile Include="third_part\include\glm\detail\glm.cpp">
       <Filter>src\lib\glm</Filter>
     </ClCompile>
-    <ClCompile Include="graphic\Camera.cpp">
-      <Filter>src\graphic</Filter>
-    </ClCompile>
-    <ClCompile Include="commons\Transform.cpp">
+    <ClCompile Include="commons\Debug.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
   </ItemGroup>
@@ -478,9 +472,6 @@
       <Filter>src\graphic</Filter>
     </ClInclude>
     <ClInclude Include="commons\Time.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
-    <ClInclude Include="commons\Vec3.h">
       <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="graphic\Texture.h">
@@ -1218,10 +1209,10 @@
     <ClInclude Include="third_part\include\stb_image.h">
       <Filter>src\lib</Filter>
     </ClInclude>
-    <ClInclude Include="graphic\Camera.h">
-      <Filter>src\graphic</Filter>
+    <ClInclude Include="commons\MathType.h">
+      <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="commons\Transform.h">
+    <ClInclude Include="commons\Debug.h">
       <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>

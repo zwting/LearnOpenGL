@@ -60,6 +60,31 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 	_textureLengh = 0;
 }
 
+void Shader::SetVec4(const char* variable, GLfloat x, GLfloat y, GLfloat z, GLfloat w) const
+{
+	const GLint location = glGetUniformLocation(this->_program, variable);
+	glUniform4f(location, x, y, z, w);
+}
+
+void Shader::SetFloat(const char* variable, float val) const
+
+{
+	const GLint location = glGetUniformLocation(this->_program, variable);
+	glUniform1f(location, val);
+}
+
+void Shader::SetInt(const char* variable, int val) const
+{
+	const GLint location = glGetUniformLocation(this->_program, variable);
+	glUniform1i(location, val);
+}
+
+void Shader::SetMat4vf(const char* variable, const GLfloat* val) const
+{
+	const GLint location = glGetUniformLocation(this->_program, variable);
+	glUniformMatrix4fv(location, 1, GL_FALSE, val);
+}
+
 void Shader::AddTexture(const Texture* texture)
 {
 	assert(texture);
@@ -80,31 +105,6 @@ void Shader::Use() const
 		sprintf_s(textureName, "texture%d", i);
 		SetInt(textureName, i);
 	}
-}
-
-void Shader::SetVec4(const char* variable, GLfloat x, GLfloat y, GLfloat z, GLfloat w) const
-{
-	GLint location = glGetUniformLocation(this->_program, variable);
-	glUniform4f(location, x, y, z, w);
-}
-
-void Shader::SetFloat(const char* variable, float val) const
-
-{
-	GLint location = glGetUniformLocation(this->_program, variable);
-	glUniform1f(location, val);
-}
-
-void Shader::SetInt(const char* variable, int val) const
-{
-	GLint location = glGetUniformLocation(this->_program, variable);
-	glUniform1i(location, val);
-}
-
-void Shader::SetMat4vf(const char* variable, const GLfloat* val) const
-{
-	GLint location = glGetUniformLocation(this->_program, variable);
-	glUniformMatrix4fv(location, 1, GL_FALSE, val);
 }
 
 

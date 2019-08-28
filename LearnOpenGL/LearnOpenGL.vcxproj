@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -158,10 +158,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="commons\CommonUtils.cpp" />
+    <ClCompile Include="commons\Debug.cpp" />
     <ClCompile Include="commons\Time.cpp" />
-    <ClCompile Include="commons\Transform.cpp" />
-    <ClCompile Include="commons\Vec3.cpp" />
-    <ClCompile Include="graphic\Camera.cpp" />
     <ClCompile Include="graphic\Texture.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="graphic\Shader.cpp" />
@@ -308,10 +306,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commons\CommonUtils.h" />
+    <ClInclude Include="commons\Debug.h" />
     <ClInclude Include="commons\Time.h" />
-    <ClInclude Include="commons\Transform.h" />
-    <ClInclude Include="commons\Vec3.h" />
-    <ClInclude Include="graphic\Camera.h" />
+    <ClInclude Include="commons\MathType.h" />
     <ClInclude Include="graphic\Shader.h" />
     <ClInclude Include="graphic\Texture.h" />
     <ClInclude Include="third_part\include\glm\common.hpp" />

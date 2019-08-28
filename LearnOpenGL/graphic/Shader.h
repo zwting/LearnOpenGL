@@ -8,6 +8,7 @@ class Shader
 private:
 	std::string _vertexSrc;
 	std::string _fragSrc;
+
 	GLuint _textureList[16];
 	int _textureLengh;
 
@@ -32,7 +33,6 @@ public:
 
 	void Use() const;
 
-	//下面是设置uniform的方法
 	void SetVec4(const char* variable, float x, float y, float z, float w = 1.0f) const;
 	void SetFloat(const char* variable, float val) const;
 	void SetInt(const char* variable, int val) const;
