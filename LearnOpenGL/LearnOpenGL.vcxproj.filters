@@ -53,6 +53,9 @@
     <ClCompile Include="commons\Debug.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="commons\Camera.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\triangle.frag">
@@ -1213,6 +1216,9 @@
       <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="commons\Debug.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="commons\Camera.h">
       <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>

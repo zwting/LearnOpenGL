@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="commons\Camera.cpp" />
     <ClCompile Include="commons\CommonUtils.cpp" />
     <ClCompile Include="commons\Debug.cpp" />
     <ClCompile Include="commons\Time.cpp" />
@@ -305,6 +306,7 @@
     <None Include="third_part\include\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="commons\Camera.h" />
     <ClInclude Include="commons\CommonUtils.h" />
     <ClInclude Include="commons\Debug.h" />
     <ClInclude Include="commons\Time.h" />
