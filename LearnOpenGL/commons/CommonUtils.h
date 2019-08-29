@@ -4,7 +4,6 @@
 #include <cassert>
 #include <sstream>
 #include "Time.h"
-#include "glad/glad.h"
 
 class CommonUtils
 {
