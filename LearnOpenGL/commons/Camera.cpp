@@ -34,7 +34,6 @@ const mat4x4& Camera::GetViewMatrix()
 
 const mat4x4& Camera::GetProjMatrix()
 {
-	// glm::perspective()
 	return mProjMatrix;
 }
 
