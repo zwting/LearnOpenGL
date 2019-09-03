@@ -1,9 +1,11 @@
 ﻿#pragma once
 
 #include <glm/glm.hpp>
+#include <glm/ext/quaternion_float.hpp>
 
 typedef glm::vec3 vec3;
-typedef glm::quat qua;
+typedef glm::vec2 vec2;
+typedef glm::quat quaternion;
 typedef glm::mat4x4 mat4x4;
 
 #define mat_identity mat4x4(1.0f)
@@ -17,4 +19,4 @@ typedef glm::mat4x4 mat4x4;
 #define vec3_forward vec3(0,0,1)
 #define vec3_back vec3(0,0,-1)
 
-#define qua_identity qua();
+#define qua_identity quaternion(1,0,0,0)

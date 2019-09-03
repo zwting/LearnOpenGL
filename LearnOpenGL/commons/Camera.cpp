@@ -1,45 +1,66 @@
 ﻿#include "Camera.h"
 #include <glm/glm.hpp>
 
-Camera::Camera(vec3& pos, vec3& forward, float fov, float near, float far, vec3 up)
+Camera::Camera(vec3 pos, vec3 forward, float fov, float aspect, float near, float far, vec3 up)
 {
-	mPosition = pos;
-	mForward = forward;
-	mFov = fov;
-	mNear = near;
-	mFar = far;
-	mWorldUp = up;
+	this->position = pos;
+	this->forward = forward;
+	this->fov = fov;
+	this->near = near;
+	this->far = far;
+	this->worldUp = up;
+	this->aspect = aspect;
+
+	this->isDirty = true;
+
+	viewMatrix = mat_identity;
+
+	projMatrix = glm::perspective(
+		glm::radians(fov),
+		aspect,
+		near,
+		far
+	);
 }
 
-const mat4x4& Camera::GetViewMatrix()
+const mat4x4& Camera::getViewMatrix()
 {
-	mViewMatrix[0][0] = -mRight.x;
-	mViewMatrix[1][0] = -mRight.y;
-	mViewMatrix[2][0] = -mRight.z;
-
-	mViewMatrix[0][0] = mUp.x;
-	mViewMatrix[1][0] = mUp.y;
-	mViewMatrix[2][0] = mUp.z;
-
-	mViewMatrix[0][0] = mForward.x;
-	mViewMatrix[1][0] = mForward.y;
-	mViewMatrix[2][0] = mForward.z;
-
-	mViewMatrix[3][0] = glm::dot(mRight, mPosition);
-	mViewMatrix[3][1] = glm::dot(mUp, mPosition);
-	mViewMatrix[3][2] = glm::dot(mForward, mPosition);
-
-	return mViewMatrix;
+	if (isDirty)
+	{
+		calcViewMatrix();
+	}
+	return viewMatrix;
 }
 
-const mat4x4& Camera::GetProjMatrix()
+const mat4x4& Camera::getProjMatrix()
 {
-	return mProjMatrix;
+	return projMatrix;
 }
 
-void Camera::LookAt(const vec3& target, const vec3& worldUp)
+void Camera::lookAt(const vec3& target, const vec3& worldUp)
 {
-	mForward = glm::normalize(target - mPosition);
-	mRight = glm::cross(mForward, worldUp);
-	mUp = glm::cross(mRight, mForward);
+	forward = glm::normalize(target - position);
+	right = glm::cross(forward, glm::normalize(worldUp));
+	up = glm::cross(right, forward);
+
+	isDirty = true;
+}
+
+void Camera::calcViewMatrix()
+{
+	viewMatrix[0][0] = right.x;
+	viewMatrix[1][0] = right.y;
+	viewMatrix[2][0] = right.z;
+
+	viewMatrix[0][1] = up.x;
+	viewMatrix[1][1] = up.y;
+	viewMatrix[2][1] = up.z;
+
+	viewMatrix[0][2] = -forward.x;
+	viewMatrix[1][2] = -forward.y;
+	viewMatrix[2][2] = -forward.z;
+
+	viewMatrix[3][0] = -glm::dot(right, position);
+	viewMatrix[3][1] = -glm::dot(up, position);
+	viewMatrix[3][2] = glm::dot(forward, position);
 }

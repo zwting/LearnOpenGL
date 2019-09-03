@@ -8,6 +8,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "commons/MathType.h"
+#include "commons/Camera.h"
 
 
 GLFWwindow* g_win;
@@ -24,8 +25,8 @@ const unsigned int SCREEN_HEIGHT = 600;
 
 GLuint VAO, VBO;
 Shader* p_shader;
-vec3 g_cameraDir(0,0,1);
-vec3 g_cameraPos(0, 0, -5);
+
+Camera* g_pCamera;
 
 
 void InitData();
@@ -65,11 +66,20 @@ int main()
 //初始化数据
 void InitData()
 {
+	g_pCamera = new Camera(
+		vec3(0, 0, -5),
+		vec3_forward,
+		45.0f,
+		static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
+		0.1f,
+		100.0f
+	);
+	
 	p_shader = new Shader("shaders/triangle.vert", "shaders/triangle.frag");
 	const auto pTexture_1 = new Texture("resources/texture/container.jpg");
 	const auto pTexture_2 = new Texture("resources/texture/huaji.jpg");
-	p_shader->AddTexture(pTexture_1);
-	p_shader->AddTexture(pTexture_2);
+	// p_shader->AddTexture(pTexture_1);
+	// p_shader->AddTexture(pTexture_2);
 
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -139,15 +149,9 @@ void InitData()
 	mat4x4 proj = mat4x4(1.0f);
 
 	model = glm::rotate(model, glm::radians(50.0f), vec3_left);
-	view = translate(view, vec3(0, 0, -5.0f));
-	proj = glm::perspective(
-		glm::radians(45.0f),
-		static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
-		0.1f,
-		100.0f);
+
 	p_shader->SetMat4vf("model", glm::value_ptr(model));
-	p_shader->SetMat4vf("view", glm::value_ptr(view));
-	p_shader->SetMat4vf("proj", glm::value_ptr(proj));
+	p_shader->SetMat4vf("proj", glm::value_ptr(g_pCamera->getProjMatrix()));
 
 
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -188,8 +192,8 @@ void Render()
 
 void Update(float dt)
 {
-	mat4x4 view = glm::lookAtRH(g_cameraPos, g_cameraPos + g_cameraDir, vec3_up);
-	p_shader->SetMat4vf("view", glm::value_ptr(view));
+	g_pCamera->lookAt(g_pCamera->getPosition() + g_pCamera->getForward());
+	p_shader->SetMat4vf("view", glm::value_ptr(g_pCamera->getViewMatrix()));
 }
 
 
@@ -227,10 +231,12 @@ void CursorPosCallback(GLFWwindow* win, double x, double y)
 
 	pitch = CommonUtils::Clamp(pitch, -89.0f, 89.0);
 
-	g_cameraDir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	g_cameraDir.y = sin(glm::radians(pitch));
-	g_cameraDir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	g_cameraDir = glm::normalize(g_cameraDir);
+	vec3 cameraDir;
+	cameraDir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraDir.y = sin(glm::radians(pitch));
+	cameraDir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+	g_pCamera->lookAt(g_pCamera->getPosition() + cameraDir);
 }
 
 void ScrollCallback(GLFWwindow* win, double offsetX, double offsetY)
@@ -245,26 +251,26 @@ void ProcessInput(GLFWwindow* win)
 	}
 
 	static float moveSpd = 5.0f;
+	auto cameraPos = g_pCamera->getPosition();
 	if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		g_cameraPos +=  moveSpd * CommonUtils::s_time->deltaTime * g_cameraDir;
+		cameraPos +=  moveSpd * CommonUtils::s_time->deltaTime * g_pCamera->getForward();
 	}
 	else if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		g_cameraPos +=  moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, g_cameraDir);
+		cameraPos +=  moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, g_pCamera->getForward());
 	}
 	else if (glfwGetKey(win,GLFW_KEY_S) == GLFW_PRESS)
 	{
-		g_cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * g_cameraDir;
+		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * g_pCamera->getForward();
 	}
 	else if (glfwGetKey(win,GLFW_KEY_D) == GLFW_PRESS)
 	{
-		g_cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, g_cameraDir);
+		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, g_pCamera->getForward());
 	}
+	g_pCamera->setPosition(cameraPos);
 
 }
-
-int InitGLFW();
 
 int InitGLFW()
 {

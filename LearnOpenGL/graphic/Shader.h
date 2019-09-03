@@ -9,9 +9,6 @@ private:
 	std::string _vertexSrc;
 	std::string _fragSrc;
 
-	GLuint _textureList[16];
-	int _textureLengh;
-
 	GLuint _vertexID;
 	GLuint _fragmentID;
 	GLuint _program;
@@ -29,7 +26,6 @@ private:
 	bool Compile(GLuint shaderID, const char* src);
 public:
 	Shader(const char* vertexPath, const char* fragPath);
-	void AddTexture(const Texture* texture);
 
 	void Use() const;
 

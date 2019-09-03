@@ -56,6 +56,15 @@
     <ClCompile Include="commons\Camera.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="commons\PrimitiveModel.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="commons\Mesh.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="commons\Node.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\triangle.frag">
@@ -1219,6 +1228,15 @@
       <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="commons\Camera.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="commons\Mesh.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="commons\PrimitiveModel.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="commons\Node.h">
       <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>

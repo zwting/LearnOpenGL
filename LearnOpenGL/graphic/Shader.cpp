@@ -56,8 +56,6 @@ Shader::Shader(const char* vertexPath, const char* fragPath)
 
 	glDeleteShader(_vertexID);
 	glDeleteShader(_fragmentID);
-
-	_textureLengh = 0;
 }
 
 void Shader::SetVec4(const char* variable, GLfloat x, GLfloat y, GLfloat z, GLfloat w) const
@@ -85,26 +83,9 @@ void Shader::SetMat4vf(const char* variable, const GLfloat* val) const
 	glUniformMatrix4fv(location, 1, GL_FALSE, val);
 }
 
-void Shader::AddTexture(const Texture* texture)
-{
-	assert(texture);
-
-	_textureList[_textureLengh] = texture->id();
-	_textureLengh++;
-}
-
 void Shader::Use() const
 {
 	glUseProgram(_program);
-	char textureName[64];
-	for (int i = 0; i <= _textureLengh; ++i)
-	{
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(GL_TEXTURE_2D, _textureList[i]);
-		memset(textureName, 0, sizeof(textureName));
-		sprintf_s(textureName, "texture%d", i);
-		SetInt(textureName, i);
-	}
 }
 
 

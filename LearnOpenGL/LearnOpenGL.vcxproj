@@ -160,6 +160,9 @@
     <ClCompile Include="commons\Camera.cpp" />
     <ClCompile Include="commons\CommonUtils.cpp" />
     <ClCompile Include="commons\Debug.cpp" />
+    <ClCompile Include="commons\Mesh.cpp" />
+    <ClCompile Include="commons\Node.cpp" />
+    <ClCompile Include="commons\PrimitiveModel.cpp" />
     <ClCompile Include="commons\Time.cpp" />
     <ClCompile Include="graphic\Texture.cpp" />
     <ClCompile Include="main.cpp" />
@@ -309,6 +312,9 @@
     <ClInclude Include="commons\Camera.h" />
     <ClInclude Include="commons\CommonUtils.h" />
     <ClInclude Include="commons\Debug.h" />
+    <ClInclude Include="commons\Mesh.h" />
+    <ClInclude Include="commons\Node.h" />
+    <ClInclude Include="commons\PrimitiveModel.h" />
     <ClInclude Include="commons\Time.h" />
     <ClInclude Include="commons\MathType.h" />
     <ClInclude Include="graphic\Shader.h" />
