@@ -27,6 +27,9 @@
     <Filter Include="src\lib\glm">
       <UniqueIdentifier>{b14a1acb-b6db-4184-986e-a2ab65ba732d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resources\model">
+      <UniqueIdentifier>{00b85b47-a7cf-45fa-8c6e-783e5ccbee1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -1250,5 +1253,10 @@
     <Image Include="resources\texture\huaji.jpg">
       <Filter>resources\texture</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="resources\model\cube.obj">
+      <Filter>resources\model</Filter>
+    </Object>
   </ItemGroup>
 </Project>
