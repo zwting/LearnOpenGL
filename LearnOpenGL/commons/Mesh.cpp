@@ -1,6 +1,6 @@
 ﻿#include "Mesh.h"
 
-Mesh::Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned>& indices, std::vector<Texture*> textures)
+Mesh::Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned>& indices, std::vector<MeshTexture> textures)
 {
 	this->vertices = vertices;
 	this->indices = indices;
@@ -9,7 +9,7 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned>& indices, 
 	SetupMesh();
 }
 
-void Mesh::Render(Shader* shader)
+void Mesh::Render(const Shader* shader)
 {
 	shader->Use();
 	for (unsigned int i = 0; i < textures.size(); ++i)
@@ -17,7 +17,7 @@ void Mesh::Render(Shader* shader)
 		glActiveTexture(GL_TEXTURE0 + i);
 		std::string name = "texture";
 		shader->SetInt((name + std::to_string(i)).c_str(), i);
-		glBindTexture(GL_TEXTURE_2D, textures[i]->id());
+		glBindTexture(GL_TEXTURE_2D, textures[i].texture->id());
 	}
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);

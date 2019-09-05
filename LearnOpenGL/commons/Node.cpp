@@ -1,5 +1,14 @@
 ﻿#include "Node.h"
 
+Node::~Node()
+{
+	if (model)
+	{
+		delete model;
+		model = nullptr;
+	}
+}
+
 void Node::calcModelMatrix()
 {
 	forward = -rotation * vec3_forward;

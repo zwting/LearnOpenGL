@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <vector>
 #include "Mesh.h"
+#include "Model.h"
 
 class Node
 {
@@ -15,8 +16,17 @@ private:
 
 	mat4x4 modelMatrix{};
 
-	std::vector<Mesh> meshList;
+	Model* model;
 public:
+	Model* getModel() const
+	{
+		return model;
+	}
+
+	void setModel(Model* model)
+	{
+		this->model = model;
+	}
 
 	const mat4x4& getModelMatrix()
 	{
@@ -64,11 +74,6 @@ public:
 		return up;
 	}
 
-	std::vector<Mesh> getMeshList() const
-	{
-		return meshList;
-	}
-
 private:
 	//检查transform是否需要更新
 	void checkTransformIsDirty()
@@ -91,16 +96,15 @@ public:
 		calcModelMatrix();
 	}
 
+	~Node();
+
 	void calcModelMatrix();
 
 	void Render(Shader* shader)
 	{
-		if (meshList.empty())
-			return;
-
-		for (auto it = meshList.begin(); it != meshList.end(); ++it)
+		if(model)
 		{
-			(*it).Render(shader);
+			model->Render(shader);
 		}
 	};
 };

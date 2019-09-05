@@ -13,16 +13,37 @@ struct Vertex
 	vec2 texcoord;
 };
 
+struct MeshTexture
+{
+	enum class TextureType
+	{
+		Diffuse,
+		Specular,
+		Normal,
+	};
+
+	Texture* texture;
+	TextureType type;
+	std::string path;
+
+	MeshTexture(std::string texturePath, TextureType textureType = TextureType::Diffuse)
+		: type(textureType),
+		  path(texturePath)
+	{
+		texture = new Texture(path.c_str());
+	}
+};
+
 
 class Mesh
 {
 public:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
-	std::vector<Texture*> textures;
+	std::vector<MeshTexture> textures;
 
-	Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<Texture*> textures);
-	void Render(Shader* shader);
+	Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<MeshTexture> textures);
+	void Render(const Shader* shader);
 
 private:
 	unsigned int VAO, VBO, EBO;
