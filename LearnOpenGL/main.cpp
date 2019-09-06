@@ -9,6 +9,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "commons/MathType.h"
 #include "commons/Camera.h"
+#include "commons/PrimitiveModel.h"
 
 
 GLFWwindow* g_win;
@@ -27,6 +28,7 @@ GLuint VAO, VBO;
 Shader* p_shader;
 
 Camera* g_pCamera;
+Node* cube;
 
 
 void InitData();
@@ -74,6 +76,8 @@ void InitData()
 		0.1f,
 		100.0f
 	);
+
+	cube = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Cube);
 	
 	p_shader = new Shader("shaders/triangle.vert", "shaders/triangle.frag");
 	const auto pTexture_1 = new Texture("resources/texture/container.jpg");
@@ -178,16 +182,19 @@ void Render()
 	float t = CommonUtils::s_time->time;
 	float greenVal = sin(t) * 0.5f + 0.5f;
 
-	glBindVertexArray(VAO);
-	for (int i = 0; i < 10; ++i)
-	{
-		mat4x4 model(1.0f);
-		model = glm::translate(model, cubePositions[i]);
-		model = glm::rotate(model, i * 20.0f, vec3_one);
-		p_shader->SetMat4vf("model", glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-	}
-	glBindVertexArray(0);
+	cube->Render(p_shader);
+	// glBindVertexArray(VAO);
+	// for (int i = 0; i < 10; ++i)
+	// {
+	// 	mat4x4 model(1.0f);
+	// 	model = glm::translate(model, cubePositions[i]);
+	// 	model = glm::rotate(model, i * 20.0f, vec3_one);
+	// 	p_shader->SetMat4vf("model", glm::value_ptr(model));
+	// 	glDrawArrays(GL_TRIANGLES, 0, 36);
+	// }
+	// glBindVertexArray(0);
+
+	
 }
 
 void Update(float dt)

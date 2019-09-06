@@ -8,12 +8,14 @@ class Model
 {
 private:
 	std::vector<Mesh*> meshList;
+	std::vector<MeshTexture> textureList;
 	std::string modelPath;
 
 	void loadModel(std::string path);
 	void processNode(aiNode* node, const aiScene* scene);
 	Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
 	std::vector<MeshTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, MeshTexture::TextureType meshTextureType);
+	bool isLoadedTexture(const std::string path);
 public:
 	Model(std::string path)
 	{

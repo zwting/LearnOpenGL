@@ -1,5 +1,7 @@
 ﻿#include "PrimitiveModel.h"
 
+std::map<PrimitiveModel::PrimitiveType, Model*> PrimitiveModel::cachedModel;
+
 Node* PrimitiveModel::CreatePrimitive(const PrimitiveType type)
 {
 	Node* ret = nullptr;
@@ -7,21 +9,26 @@ Node* PrimitiveModel::CreatePrimitive(const PrimitiveType type)
 	{
 	case PrimitiveType::Cube:
 		ret = new Node(vec3_zero, qua_identity);
-		
+		ret->setModel(GetModel(type));
 		break;
 	}
 
 	return ret;
 }
 
-Mesh* PrimitiveModel::getCubeMesh()
+Model* PrimitiveModel::GetModel(PrimitiveType type)
 {
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-	std::vector<Texture*> textures;
+	if (cachedModel[type]) return cachedModel[type];
 
-	
+	switch (type)
+	{
+	case PrimitiveType::Cube:
+		static Model* model = new Model("resources/model/cube.obj");
+		cachedModel[type] = model;
+		break;
+	default:
+		return cachedModel[PrimitiveType::Cube];
+	}
 
-	
-	return new Mesh(vertices, indices, textures);
+	return cachedModel[type];
 }

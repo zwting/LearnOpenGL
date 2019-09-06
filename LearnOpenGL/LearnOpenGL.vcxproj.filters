@@ -62,9 +62,6 @@
     <ClCompile Include="commons\Camera.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="commons\PrimitiveModel.cpp">
-      <Filter>src\common</Filter>
-    </ClCompile>
     <ClCompile Include="commons\Mesh.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
@@ -72,7 +69,10 @@
       <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="commons\Model.cpp">
-      <Filter>src</Filter>
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="commons\PrimitiveModel.cpp">
+      <Filter>src\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1263,9 +1263,6 @@
     <ClInclude Include="commons\Mesh.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="commons\PrimitiveModel.h">
-      <Filter>src\common</Filter>
-    </ClInclude>
     <ClInclude Include="commons\Node.h">
       <Filter>src\common</Filter>
     </ClInclude>
@@ -1392,6 +1389,12 @@
     <ClInclude Include="commons\Model.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="third_part\include\assimp\config.h">
+      <Filter>src\lib\assimp</Filter>
+    </ClInclude>
+    <ClInclude Include="commons\PrimitiveModel.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\texture\container.jpg">
@@ -1403,10 +1406,5 @@
     <Image Include="resources\texture\huaji.jpg">
       <Filter>resources\texture</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="resources\model\cube.obj">
-      <Filter>resources\model</Filter>
-    </Object>
   </ItemGroup>
 </Project>

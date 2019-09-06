@@ -93,6 +93,14 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		);
 
 		textures.insert(textures.end(), specularTextures.begin(), specularTextures.end());
+
+		std::vector<MeshTexture> normalTextures = loadMaterialTextures(
+			material,
+			aiTextureType_SPECULAR,
+			MeshTexture::TextureType::Specular
+		);
+
+		textures.insert(textures.end(), normalTextures.begin(), normalTextures.end());
 	}
 
 	return new Mesh(vertices, indices, textures);
@@ -101,8 +109,35 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 std::vector<MeshTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type,
                                                      MeshTexture::TextureType meshTextureType)
 {
-	// std::vector<MeshTexture>
+	std::vector<MeshTexture> textures;
+	for (size_t i = 0; i < mat->GetTextureCount(type); ++i)
+	{
+		aiString str;
+		mat->GetTexture(type, i, &str);
+		if(isLoadedTexture(str.C_Str()))
+		{
+			continue;
+		}
+		MeshTexture texture(str.C_Str(), meshTextureType);
+		textures.push_back(texture);
+		textureList.push_back(texture);
+	}
+	return textures;
 }
+
+//参数指定的路径的纹理是否已经加载过
+bool Model::isLoadedTexture(const std::string path)
+{
+	for(size_t i = 0;i<textureList.size();++i)
+	{
+		if(textureList[i].path == path)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 
 void Model::Render(const Shader* pShader)
 {

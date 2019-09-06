@@ -99,7 +99,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp-vc140-mt.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -115,7 +115,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -338,6 +338,7 @@
     <ClInclude Include="third_part\include\assimp\Compiler\poppack1.h" />
     <ClInclude Include="third_part\include\assimp\Compiler\pstdint.h" />
     <ClInclude Include="third_part\include\assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="third_part\include\assimp\config.h" />
     <ClInclude Include="third_part\include\assimp\DefaultIOStream.h" />
     <ClInclude Include="third_part\include\assimp\DefaultIOSystem.h" />
     <ClInclude Include="third_part\include\assimp\DefaultLogger.hpp" />
@@ -617,9 +618,6 @@
     <Image Include="resources\texture\brick.jpg" />
     <Image Include="resources\texture\container.jpg" />
     <Image Include="resources\texture\huaji.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="resources\model\cube.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

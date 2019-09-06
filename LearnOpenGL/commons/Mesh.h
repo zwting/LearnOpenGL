@@ -20,6 +20,7 @@ struct MeshTexture
 		Diffuse,
 		Specular,
 		Normal,
+		Height,
 	};
 
 	Texture* texture;
