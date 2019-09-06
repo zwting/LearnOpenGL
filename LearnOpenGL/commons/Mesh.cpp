@@ -24,6 +24,10 @@ void Mesh::Render(const Shader* shader)
 	glBindVertexArray(0);
 }
 
+void Mesh::AddTexture(MeshTexture texture)
+{
+}
+
 void Mesh::SetupMesh()
 {
 	glGenVertexArrays(1, &VAO);

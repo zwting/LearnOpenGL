@@ -45,6 +45,7 @@ public:
 
 	Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<MeshTexture> textures);
 	void Render(const Shader* shader);
+	void AddTexture(MeshTexture texture);
 
 private:
 	unsigned int VAO, VBO, EBO;
