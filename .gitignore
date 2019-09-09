@@ -3,3 +3,7 @@
 /LearnOpenGL/x64
 **/Debug
 /.vs
+
+/Test/x64
+/Test/Release
+/Release
