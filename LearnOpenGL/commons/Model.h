@@ -14,12 +14,20 @@ private:
 	void loadModel(std::string path);
 	void processNode(aiNode* node, const aiScene* scene);
 	Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
-	std::vector<MeshTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, MeshTexture::TextureType meshTextureType);
+	std::vector<MeshTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type,
+	                                              MeshTexture::TextureType meshTextureType);
 	bool isLoadedTexture(const std::string path);
+public:
+	std::vector<Mesh*> getMeshList() const
+	{
+		return meshList;
+	}
+
 public:
 	Model(std::string path)
 	{
 		loadModel(path);
 	}
+
 	void Render(const Shader* pShader);
 };

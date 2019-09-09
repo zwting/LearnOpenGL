@@ -11,6 +11,6 @@ uniform float factor;
 void main()
 {
 	vec4 t1 = texture(texture0, TexCoord);
-	vec4 t2 = texture(texture1, TexCoord);
-	FragColor = mix(t1, t2, factor);
+	//vec4 t2 = texture(texture1, TexCoord);
+	FragColor = t1;
 }

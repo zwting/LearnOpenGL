@@ -15,7 +15,7 @@
 GLFWwindow* g_win;
 void FrameBufferSizeCallback(GLFWwindow* window, int width, int height);
 void CursorPosCallback(GLFWwindow* win, double x, double y);
-void  ScrollCallback(GLFWwindow* win, double offsetX, double offsetY);
+void ScrollCallback(GLFWwindow* win, double offsetX, double offsetY);
 void ProcessInput(GLFWwindow* win);
 int InitGLFW();
 void Render();
@@ -78,84 +78,27 @@ void InitData()
 	);
 
 	cube = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Cube);
-	
+	cube->setRotation(glm::angleAxis(glm::radians(45.0f), vec3_up));
+	auto modelCube = cube->getModel();
+	if (modelCube)
+	{
+		const auto meshes = modelCube->getMeshList();
+		if (!meshes.empty())
+		{
+			meshes[0]->AddTexture(MeshTexture("resources/texture/brick.jpg"));
+		}
+	}
+
 	p_shader = new Shader("shaders/triangle.vert", "shaders/triangle.frag");
-	const auto pTexture_1 = new Texture("resources/texture/container.jpg");
-	const auto pTexture_2 = new Texture("resources/texture/huaji.jpg");
 	// p_shader->AddTexture(pTexture_1);
 	// p_shader->AddTexture(pTexture_2);
 
-	float vertices[] = {
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-
-		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f
-	};
-
-	glGenBuffers(1, &VBO);
-	glGenVertexArrays(1, &VAO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, reinterpret_cast<void*>(0));
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 5, reinterpret_cast<void*>(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
 	p_shader->Use();
 
-	mat4x4 model = mat4x4(1.0f);
 	mat4x4 view = mat4x4(1.0f);
 	mat4x4 proj = mat4x4(1.0f);
 
-	model = glm::rotate(model, glm::radians(50.0f), vec3_left);
-
-	p_shader->SetMat4vf("model", glm::value_ptr(model));
-	p_shader->SetMat4vf("proj", glm::value_ptr(g_pCamera->getProjMatrix()));
+	p_shader->SetMat4vf("proj",value_ptr(g_pCamera->getProjMatrix()));
 
 
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -193,14 +136,12 @@ void Render()
 	// 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	// }
 	// glBindVertexArray(0);
-
-	
 }
 
 void Update(float dt)
 {
 	g_pCamera->lookAt(g_pCamera->getPosition() + g_pCamera->getForward());
-	p_shader->SetMat4vf("view", glm::value_ptr(g_pCamera->getViewMatrix()));
+	p_shader->SetMat4vf("view",value_ptr(g_pCamera->getViewMatrix()));
 }
 
 
@@ -222,14 +163,14 @@ void CursorPosCallback(GLFWwindow* win, double x, double y)
 	// std::cout << '(' << x << ',' << y << ')' << std::endl;
 
 	//计算相机方向
-	static float yaw = 0;
+	static float yaw = g_pCamera-;
 	static float pitch = 0;
 
 	float speed = 0.1f;
-	
+
 	static vec3 prevPos(x, y, 0);
-	vec3 dir = vec3(x, y, 0) - prevPos;
-	dir.y *= -1;
+	vec3 delta = vec3(x, y, 0) - prevPos;
+	delta.y *= -1;
 	prevPos.x = x;
 	prevPos.y = y;
 
@@ -259,24 +200,31 @@ void ProcessInput(GLFWwindow* win)
 
 	static float moveSpd = 5.0f;
 	auto cameraPos = g_pCamera->getPosition();
+	bool isMove = false;
 	if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		cameraPos +=  moveSpd * CommonUtils::s_time->deltaTime * g_pCamera->getForward();
+		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * g_pCamera->getForward();
+		isMove = true;
 	}
 	else if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		cameraPos +=  moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, g_pCamera->getForward());
+		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, g_pCamera->getForward());
+		isMove = true;
 	}
 	else if (glfwGetKey(win,GLFW_KEY_S) == GLFW_PRESS)
 	{
 		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * g_pCamera->getForward();
+		isMove = true;
 	}
 	else if (glfwGetKey(win,GLFW_KEY_D) == GLFW_PRESS)
 	{
 		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, g_pCamera->getForward());
+		isMove = true;
 	}
-	g_pCamera->setPosition(cameraPos);
-
+	if (isMove)
+	{
+		g_pCamera->setPosition(cameraPos);
+	}
 }
 
 int InitGLFW()

@@ -26,6 +26,19 @@ void Mesh::Render(const Shader* shader)
 
 void Mesh::AddTexture(MeshTexture texture)
 {
+	bool isFind = false;
+	for(size_t i = 0;i<textures.size();++i)
+	{
+		if(texture.path == textures[i].path)
+		{
+			isFind = true;
+			break;
+		}
+	}
+	if(!isFind)
+	{
+		textures.push_back(texture);
+	}
 }
 
 void Mesh::SetupMesh()

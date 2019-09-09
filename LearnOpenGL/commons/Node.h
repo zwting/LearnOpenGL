@@ -47,13 +47,21 @@ public:
 	void setRotation(quaternion rotation)
 	{
 		isTransformDirty = true;
-		this->rotation = rotation;
+		this->rotation = glm::normalize(rotation);
 	}
 
-	void setPosition(vec3 position)
+	void setPosition(const vec3& position)
 	{
 		isTransformDirty = true;
 		this->position = position;
+	}
+
+	void setPosition(float x, float y, float z)
+	{
+		isTransformDirty = true;
+		this->position.x = x;
+		this->position.y = y;
+		this->position.z = z;
 	}
 
 	vec3 getForward()
@@ -104,6 +112,7 @@ public:
 	{
 		if(model)
 		{
+			shader->SetMat4vf("model",value_ptr(getModelMatrix()));
 			model->Render(shader);
 		}
 	};
