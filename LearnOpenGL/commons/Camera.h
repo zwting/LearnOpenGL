@@ -1,14 +1,14 @@
 ﻿#pragma once
 #include "MathType.h"
+#include "Node.h"
 
 class Camera
 {
 private:
-	vec3 position{};
-	vec3 forward{};
-	vec3 up{};
-	vec3 worldUp{};
-	vec3 right{};
+	Node* node;
+
+	vec3 forward;
+	vec3 up;
 
 	float fov;
 	float near;
@@ -21,15 +21,20 @@ private:
 	mat4x4 projMatrix{};
 
 public:
+	Node* getNode() const
+	{
+		return node;
+	}
+
 	vec3 getPosition() const
 	{
-		return position;
+		return node->getPosition();
 	}
 
 	void setPosition(vec3 vec)
 	{
 		isDirty = true;
-		position = vec;
+		node->setPosition(vec);
 	}
 
 	vec3 getForward() const
@@ -39,25 +44,20 @@ public:
 
 	vec3 getUp() const
 	{
-		return up;
-	}
-
-	void setUp(vec3 vec)
-	{
-		isDirty = true;
-		up = vec;
+		return node->getUp();
 	}
 
 	vec3 getRight() const
 	{
-		return right;
+		return node->getRight();
 	}
 
 
 public:
 	Camera(vec3 pos, vec3 forward, float fov, float aspect, float near, float far, vec3 worldUp = vec3_up);
 	const mat4x4& getViewMatrix();
-	const mat4x4& getProjMatrix();
+	const mat4x4& getProjMatrix() const;
 	void lookAt(const vec3& target, const vec3& worldUp = vec3_up);
 	void calcViewMatrix();
+	void rotate(const quaternion& q);
 };

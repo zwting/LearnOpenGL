@@ -140,7 +140,6 @@ void Render()
 
 void Update(float dt)
 {
-	g_pCamera->lookAt(g_pCamera->getPosition() + g_pCamera->getForward());
 	p_shader->SetMat4vf("view",value_ptr(g_pCamera->getViewMatrix()));
 }
 
@@ -163,28 +162,22 @@ void CursorPosCallback(GLFWwindow* win, double x, double y)
 	// std::cout << '(' << x << ',' << y << ')' << std::endl;
 
 	//计算相机方向
-	static float yaw = g_pCamera-;
+	static float yaw = 0;
 	static float pitch = 0;
 
 	float speed = 0.1f;
 
 	static vec3 prevPos(x, y, 0);
 	vec3 delta = vec3(x, y, 0) - prevPos;
-	delta.y *= -1;
+	delta *= 0.4f;
 	prevPos.x = x;
 	prevPos.y = y;
 
-	yaw += dir.x * speed;
-	pitch += dir.y * speed;
+	std::cout << delta.x << ", " << delta.y << std::endl;
+	quaternion qx = glm::angleAxis(glm::radians(delta.x),vec3_up);
+	quaternion qy = glm::angleAxis(glm::radians(delta.y),vec3_right);
 
-	pitch = CommonUtils::Clamp(pitch, -89.0f, 89.0);
-
-	vec3 cameraDir;
-	cameraDir.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraDir.y = sin(glm::radians(pitch));
-	cameraDir.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-
-	g_pCamera->lookAt(g_pCamera->getPosition() + cameraDir);
+	g_pCamera->rotate(qx * qy);
 }
 
 void ScrollCallback(GLFWwindow* win, double offsetX, double offsetY)

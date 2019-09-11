@@ -108,6 +108,10 @@ public:
 
 	void calcModelMatrix();
 
+	void Rotate(const quaternion& q);
+
+	void LookAt(const vec3& target, const vec3& up = vec3_up);
+
 	void Render(Shader* shader)
 	{
 		if(model)
