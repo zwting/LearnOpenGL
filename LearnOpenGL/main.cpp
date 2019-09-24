@@ -69,8 +69,8 @@ int main()
 void InitData()
 {
 	g_pCamera = new Camera(
-		vec3(0, 0, -5),
-		vec3_forward,
+		vec3(0, 0, 5),
+		vec3_zero,
 		45.0f,
 		static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
 		0.1f,
@@ -95,10 +95,8 @@ void InitData()
 
 	p_shader->Use();
 
-	mat4x4 view = mat4x4(1.0f);
-	mat4x4 proj = mat4x4(1.0f);
-
 	p_shader->SetMat4vf("proj",value_ptr(g_pCamera->getProjMatrix()));
+	p_shader->SetMat4vf("view",value_ptr(g_pCamera->getViewMatrix()));
 
 
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -124,18 +122,7 @@ void Render()
 {
 	float t = CommonUtils::s_time->time;
 	float greenVal = sin(t) * 0.5f + 0.5f;
-
 	cube->Render(p_shader);
-	// glBindVertexArray(VAO);
-	// for (int i = 0; i < 10; ++i)
-	// {
-	// 	mat4x4 model(1.0f);
-	// 	model = glm::translate(model, cubePositions[i]);
-	// 	model = glm::rotate(model, i * 20.0f, vec3_one);
-	// 	p_shader->SetMat4vf("model", glm::value_ptr(model));
-	// 	glDrawArrays(GL_TRIANGLES, 0, 36);
-	// }
-	// glBindVertexArray(0);
 }
 
 void Update(float dt)
@@ -193,6 +180,7 @@ void ProcessInput(GLFWwindow* win)
 
 	static float moveSpd = 5.0f;
 	auto cameraPos = g_pCamera->getPosition();
+	auto node = g_pCamera->getNode();
 	bool isMove = false;
 	if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
 	{
@@ -201,7 +189,8 @@ void ProcessInput(GLFWwindow* win)
 	}
 	else if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, g_pCamera->getForward());
+		// cameraPos += moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, node->getForward());
+		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * node->getRight();
 		isMove = true;
 	}
 	else if (glfwGetKey(win,GLFW_KEY_S) == GLFW_PRESS)
@@ -211,7 +200,18 @@ void ProcessInput(GLFWwindow* win)
 	}
 	else if (glfwGetKey(win,GLFW_KEY_D) == GLFW_PRESS)
 	{
-		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, g_pCamera->getForward());
+		// cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, node->getForward());
+		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * node->getRight();
+		isMove = true;
+	}
+	else if (glfwGetKey(win, GLFW_KEY_KP_8) == GLFW_PRESS)
+	{
+		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * node->getUp();
+		isMove = true;
+	}
+	else if(glfwGetKey(win, GLFW_KEY_KP_5) ==GLFW_PRESS)
+	{
+		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * node->getUp();
 		isMove = true;
 	}
 	if (isMove)

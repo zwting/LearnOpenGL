@@ -8,6 +8,10 @@ class Node
 private:
 	quaternion rotation;
 	vec3 position;
+	vec3 scale;
+
+
+private:
 	vec3 forward{};
 	vec3 right{};
 	vec3 up{};
@@ -18,6 +22,17 @@ private:
 
 	Model* model;
 public:
+	vec3 getScale() const
+	{
+		return scale;
+	}
+
+	void setScale(const vec3& scale)
+	{
+		isTransformDirty = true;
+		this->scale = scale;
+	}
+
 	Model* getModel() const
 	{
 		return model;
@@ -70,16 +85,32 @@ public:
 		return forward;
 	}
 
+	void setForward(const vec3& forward)
+	{
+		isTransformDirty = true;
+		this->forward = forward;
+	}
+
 	vec3 getRight()
 	{
 		checkTransformIsDirty();
 		return right;
+	}
+	void setRight(const vec3& right)
+	{
+		isTransformDirty = true;
+		this->right = right;
 	}
 
 	vec3 getUp()
 	{
 		checkTransformIsDirty();
 		return up;
+	}
+	void setUp(const vec3& up)
+	{
+		isTransformDirty = true;
+		this->up = up;
 	}
 
 private:
@@ -100,6 +131,7 @@ public:
 	{
 		modelMatrix = mat_identity;
 		isTransformDirty = true;
+		scale = vec3_one;
 
 		calcModelMatrix();
 	}

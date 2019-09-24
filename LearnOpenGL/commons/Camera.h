@@ -7,7 +7,6 @@ class Camera
 private:
 	Node* node;
 
-	vec3 forward;
 	vec3 up;
 
 	float fov;
@@ -15,7 +14,8 @@ private:
 	float far;
 	float aspect;
 
-	bool isDirty;
+	bool isViewDirty;
+	bool isProjDirty;
 
 	mat4x4 viewMatrix{};
 	mat4x4 projMatrix{};
@@ -33,13 +33,8 @@ public:
 
 	void setPosition(vec3 vec)
 	{
-		isDirty = true;
+		isViewDirty = true;
 		node->setPosition(vec);
-	}
-
-	vec3 getForward() const
-	{
-		return forward;
 	}
 
 	vec3 getUp() const
@@ -52,12 +47,17 @@ public:
 		return node->getRight();
 	}
 
+	vec3 getForward()const
+	{
+		return -node->getForward();
+	}
+
 
 public:
-	Camera(vec3 pos, vec3 forward, float fov, float aspect, float near, float far, vec3 worldUp = vec3_up);
+	Camera(vec3 pos, vec3 target, float fov, float aspect, float near, float far, vec3 worldUp = vec3_up);
 	const mat4x4& getViewMatrix();
 	const mat4x4& getProjMatrix() const;
 	void lookAt(const vec3& target, const vec3& worldUp = vec3_up);
-	void calcViewMatrix();
+	void updateViewMatrix();
 	void rotate(const quaternion& q);
 };
