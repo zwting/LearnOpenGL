@@ -4,6 +4,10 @@
 ### 项目介绍
 旨在于通过打造轻量级3D游戏引擎过程中学习现代游戏引擎底层的实现细节
 
+### 开发环境
+1. windows
+2. Visual studio 2019 社区版
+
 ### 参考资料
 1. LearnOpenGL： [英文版](https://learnopengl.com/In-Practice/Debugging)  [中文版](https://learnopengl-cn.github.io/)
 2. [OGRE渲染引擎源代码](https://www.ogre3d.org/) 
