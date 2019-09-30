@@ -64,6 +64,13 @@ void Shader::SetVec4(const char* variable, GLfloat x, GLfloat y, GLfloat z, GLfl
 	glUniform4f(location, x, y, z, w);
 }
 
+void Shader::SetVec3(const char* variable, const vec3& val) const
+{
+	const GLint location = glGetUniformLocation(this->_program, variable);
+	glUniform3f(location, val.x, val.y, val.z);
+}
+
+
 void Shader::SetFloat(const char* variable, float val) const
 
 {

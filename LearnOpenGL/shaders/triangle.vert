@@ -11,13 +11,15 @@ uniform mat4x4 proj;
 
 
 out vec2 TexCoord;
+out vec3 FragPos;
+out vec3 FragNormal;
 
 mat4x4 mvp;
 
 void main()
 {
-	mvp = proj * view * model;
-	vec4 vertexPos = mvp * vec4(aPos, 1.0);
-    gl_Position = vertexPos;
+	FragPos = vec3(model * vec4(aPos, 1.0));
+	FragNormal = transpose(inverse(mat3(model))) * aNormal;
 	TexCoord = aTexCoord;
+	gl_Position = proj * view * vec4(FragPos,1.0);
 }

@@ -29,6 +29,7 @@ Shader* p_shader;
 
 Camera* g_pCamera;
 Node* cube;
+vec3 lightDir(-1,-1,1);
 
 
 void InitData();
@@ -50,7 +51,7 @@ int main()
 
 		Update(CommonUtils::s_time->deltaTime);
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		Render();
@@ -97,6 +98,7 @@ void InitData()
 
 	p_shader->SetMat4vf("proj",value_ptr(g_pCamera->getProjMatrix()));
 	p_shader->SetMat4vf("view",value_ptr(g_pCamera->getViewMatrix()));
+	p_shader->SetVec3("light0_dir", lightDir);
 
 
 	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

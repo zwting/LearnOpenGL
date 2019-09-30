@@ -1,16 +1,24 @@
 #version 430 core
 out vec4 FragColor;
 
-in vec4 vertexPos;
+in vec3 FragPos;
 in vec2 TexCoord;
+in vec3 FragNormal;
 
 uniform sampler2D texture0;
 uniform sampler2D texture1;
-uniform float factor;
+uniform sampler2D texture2;
+uniform sampler2D texture3;
+
+uniform vec3 ambient;    //环境光
+uniform vec3 light0_dir; //平行光
+
 
 void main()
 {
-	vec4 t1 = texture(texture0, TexCoord);
-	//vec4 t2 = texture(texture1, TexCoord);
-	FragColor = t1;
+	vec4 c = texture(texture0, TexCoord);
+	vec3 lightDir = normalize(light0_dir);
+	vec3 normal = normalize(FragNormal);
+	float diffuse = dot(normal, lightDir);
+	FragColor = vec4(c.rgb * diffuse, 1.0);
 }
