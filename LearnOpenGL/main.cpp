@@ -29,7 +29,7 @@ Shader* p_shader;
 
 Camera* g_pCamera;
 Node* cube;
-vec3 lightDir(1, 0, 0);
+vec3 lightDir(1, 1, 1);
 
 
 void InitData();
@@ -71,7 +71,7 @@ void InitData()
 {
 	g_pCamera = new Camera(
 		vec3(0, 0, 5),
-		vec3_zero,
+		VEC3_ZERO,
 		45.0f,
 		static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
 		0.1f,
@@ -97,8 +97,8 @@ void InitData()
 
 	p_shader->Use();
 
-	p_shader->SetMat4vf("proj",value_ptr(g_pCamera->GetProjMatrix()));
-	p_shader->SetMat4vf("view",value_ptr(g_pCamera->GetViewMatrix()));
+	p_shader->SetMat4vf("proj",VALUE_PTR(g_pCamera->GetProjMatrix()));
+	p_shader->SetMat4vf("view",VALUE_PTR(g_pCamera->GetViewMatrix()));
 	p_shader->SetVec3("light0_dir", lightDir);
 
 
@@ -130,12 +130,12 @@ void Render()
 
 void Update(float dt)
 {
-	p_shader->SetMat4vf("view",value_ptr(g_pCamera->GetViewMatrix()));
+	p_shader->SetMat4vf("view",VALUE_PTR(g_pCamera->GetViewMatrix()));
 	float speed = 30;
 	static float angle = 0;
 	angle += speed * dt;
-	auto q = glm::angleAxis(glm::radians(angle), vec3_up);
-	std::cout << "angle=" << angle << ", deltaTime=" << dt << ",fps:" << 1 / dt << std::endl;
+	auto q = glm::angleAxis(glm::radians(angle), VEC3_UP);
+	// std::cout << "angle=" << angle << ", deltaTime=" << dt << ",fps:" << 1 / dt << std::endl;
 	cube->SetRotation(q);
 }
 
@@ -155,23 +155,26 @@ void FrameBufferSizeCallback(GLFWwindow* window, int width, int height)
 //获取鼠标光标位置
 void CursorPosCallback(GLFWwindow* win, double x, double y)
 {
-	//计算相机方向
-	static float yaw = 0;
-	static float pitch = 0;
-
-	float speed = 0.1f;
+	float speed = 2.0f;
 
 	static vec3 prevPos(x, y, 0);
 	vec3 delta = vec3(x, y, 0) - prevPos;
-	delta *= 0.4f;
+	delta = delta * speed * CommonUtils::s_time->deltaTime;
 	prevPos.x = x;
 	prevPos.y = y;
 
-	// std::cout << delta.x << ", " << delta.y << std::endl;
-	quaternion qx = glm::angleAxis(glm::radians(delta.x),vec3_up);
-	quaternion qy = glm::angleAxis(glm::radians(delta.y),vec3_right);
+	quaternion qx = glm::angleAxis(glm::radians(delta.x), g_pCamera->GetNode()->GetUp());
+	quaternion qy = glm::angleAxis(glm::radians(delta.y), g_pCamera->GetNode()->GetRight());
 
-	g_pCamera->Rotate(qx * qy);
+	vec3 forward = g_pCamera->GetForward();
+
+	std::cout << "forward= (" << forward.x << ", " << forward.y << ", " << forward.z << ")" << std::endl;
+
+	forward = qy * qx * forward;
+
+	vec3 target = g_pCamera->GetNode()->GetPosition() + forward * 5.0f;
+	g_pCamera->LookAt(target);
+	// std::cout << "target = (" << target.x << ", " << target.y << ", " << target.z << ")" << std::endl;
 }
 
 void ScrollCallback(GLFWwindow* win, double offsetX, double offsetY)
@@ -216,7 +219,7 @@ void ProcessInput(GLFWwindow* win)
 		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * node->GetUp();
 		isMove = true;
 	}
-	else if(glfwGetKey(win, GLFW_KEY_KP_5) ==GLFW_PRESS)
+	else if (glfwGetKey(win, GLFW_KEY_KP_5) == GLFW_PRESS)
 	{
 		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * node->GetUp();
 		isMove = true;

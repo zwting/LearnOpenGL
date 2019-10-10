@@ -8,6 +8,7 @@ private:
 	Node* mNode;
 
 	vec3 mUp;
+	vec3 mTarget;
 
 	float mFov;
 	float mNear;
@@ -31,9 +32,8 @@ public:
 		return mNode->GetPosition();
 	}
 
-	void SetPosition(vec3 vec)
+	void SetPosition(vec3 vec) const
 	{
-		mIsViewDirty = true;
 		mNode->SetPosition(vec);
 	}
 
@@ -52,12 +52,14 @@ public:
 		return -mNode->GetForward();
 	}
 
+private:
+	void OnNodeDirty();
 
 public:
-	Camera(vec3 pos, vec3 target, float fov, float aspect, float near, float far, vec3 worldUp = vec3_up);
+	Camera(vec3 pos, vec3 target, float fov, float aspect, float near, float far, vec3 worldUp = VEC3_UP);
 	const mat4x4& GetViewMatrix();
 	const mat4x4& GetProjMatrix() const;
-	void LookAt(const vec3& target, const vec3& worldUp = vec3_up);
 	void UpdateViewMatrix();
+	void LookAt(const vec3& target, const vec3& worldUp = VEC3_UP) const;
 	void Rotate(const quaternion& q);
 };

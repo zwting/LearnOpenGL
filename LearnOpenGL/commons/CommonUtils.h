@@ -5,6 +5,7 @@
 #include <sstream>
 #include "Time.h"
 #include "MathType.h"
+#include "glm/gtx/norm.hpp"
 
 class CommonUtils
 {
@@ -39,5 +40,12 @@ public:
 		mat[1][0] = mat[1][2] = mat[1][3] = 0;
 		mat[2][0] = mat[2][1] = mat[2][3] = 0;
 		mat[3][0] = mat[3][1] = mat[3][2] = 0;
+	}
+
+	static quaternion FromDirectionTo(const vec3& u, const vec3& v)
+	{
+		float norm_u_v = glm::sqrt(glm::length2(u) * glm::length2(v));
+		vec3 w = glm::cross(u, v);
+		return glm::normalize(quaternion(norm_u_v + glm::dot(u, v), w.x, w.y, w.z));
 	}
 };

@@ -1,27 +1,30 @@
 ﻿#pragma once
 #include <vector>
-#include "Mesh.h"
 #include "Model.h"
+#include "CommonUtils.h"
+#include <functional>
 
 class Node
 {
+public:
 private:
 	quaternion mRotation;
 	vec3 mPosition;
 	vec3 mScale;
-
+	std::function<void()> mDirtyCallback;
 
 private:
-	vec3 mForward{};
-	vec3 mRight{};
-	vec3 mUp{};
-
 	bool mIsTransformDirty{};
 
 	mat4x4 mModelMatrix{};
 
 	Model* mpModel;
 public:
+	void SetDirtyCallback(std::function<void()> callback)
+	{
+		mDirtyCallback = callback;
+	}
+
 	vec3 GetScale() const
 	{
 		return mScale;
@@ -45,7 +48,10 @@ public:
 
 	const mat4x4& GetModelMatrix()
 	{
-		CheckTransformIsDirty();
+		if(mIsTransformDirty)
+		{
+			CalcModelMatrix();
+		}
 		return this->mModelMatrix;
 	}
 
@@ -63,12 +69,14 @@ public:
 	{
 		mIsTransformDirty = true;
 		this->mRotation = glm::normalize(rot);
+		CheckIsDirty();
 	}
 
 	void SetPosition(const vec3& position)
 	{
 		mIsTransformDirty = true;
 		this->mPosition = position;
+		CheckIsDirty();
 	}
 
 	void SetPosition(float x, float y, float z)
@@ -77,51 +85,46 @@ public:
 		this->mPosition.x = x;
 		this->mPosition.y = y;
 		this->mPosition.z = z;
+		CheckIsDirty();
 	}
 
-	vec3 GetForward()
+	vec3 GetForward() const
 	{
-		CheckTransformIsDirty();
-		return mForward;
+		return mRotation * VEC3_FORWARD;
 	}
 
 	void SetForward(const vec3& forward)
 	{
 		mIsTransformDirty = true;
-		this->mForward = forward;
+		mRotation = CommonUtils::FromDirectionTo(VEC3_FORWARD , forward);
+		CheckIsDirty();
 	}
 
-	vec3 GetRight()
+	vec3 GetRight() const
 	{
-		CheckTransformIsDirty();
-		return mRight;
+		return mRotation * VEC3_RIGHT;
 	}
 	void SetRight(const vec3& right)
 	{
 		mIsTransformDirty = true;
-		this->mRight = right;
+		mRotation = CommonUtils::FromDirectionTo(VEC3_RIGHT, right);
+		CheckIsDirty();
 	}
 
-	vec3 GetUp()
+	vec3 GetUp() const
 	{
-		CheckTransformIsDirty();
-		return mUp;
+		return mRotation * VEC3_UP;
 	}
 	void SetUp(const vec3& up)
 	{
 		mIsTransformDirty = true;
-		this->mUp = up;
+		mRotation = CommonUtils::FromDirectionTo(VEC3_UP, up);
+		CheckIsDirty();
 	}
 
 private:
 	//检查transform是否需要更新
-	void CheckTransformIsDirty()
-	{
-		if(mIsTransformDirty)
-		{
-			CalcModelMatrix();
-		}
-	}
+	void CheckIsDirty() const;
 
 public:
 	Node(vec3 pos, quaternion rot)
@@ -129,26 +132,29 @@ public:
 		mRotation(rot),
 		mPosition(pos)
 	{
-		mModelMatrix = mat_identity;
+		mModelMatrix = MAT_IDENTITY;
 		mIsTransformDirty = true;
-		mScale = vec3_one;
+		mDirtyCallback = nullptr;
+		mScale = VEC3_ONE;
 
 		CalcModelMatrix();
+		CheckIsDirty();
 	}
 
 	~Node();
+
 
 	void CalcModelMatrix();
 
 	void Rotate(const quaternion& q);
 
-	void LookAt(const vec3& target, const vec3& up = vec3_up);
+	void LookAt(const vec3& target, const vec3& up = VEC3_UP);
 
 	void Render(Shader* shader)
 	{
 		if(mpModel)
 		{
-			shader->SetMat4vf("model",value_ptr(GetModelMatrix()));
+			shader->SetMat4vf("model",VALUE_PTR(GetModelMatrix()));
 			mpModel->Render(shader);
 		}
 	}

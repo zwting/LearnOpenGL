@@ -9,16 +9,16 @@ typedef glm::vec2 vec2;
 typedef glm::quat quaternion;
 typedef glm::mat4x4 mat4x4;
 
-#define value_ptr glm::value_ptr
-#define mat_identity mat4x4(1.0f)
+#define VALUE_PTR glm::value_ptr
+#define MAT_IDENTITY mat4x4(1.0f)
 
-#define vec3_zero vec3(0, 0, 0)
-#define vec3_one vec3(1, 1, 1)
-#define vec3_up vec3(0, 1, 0)
-#define vec3_down vec3(0, -1, 0)
-#define vec3_left vec3(-1, 0, 0)
-#define vec3_right vec3(1, 0, 0)
-#define vec3_forward vec3(0, 0, -1)
-#define vec3_back vec3(0, 0, 1)
+#define VEC3_ZERO vec3(0, 0, 0)
+#define VEC3_ONE vec3(1, 1, 1)
+#define VEC3_UP vec3(0, 1, 0)
+#define VEC3_DOWN vec3(0, -1, 0)
+#define VEC3_LEFT vec3(-1, 0, 0)
+#define VEC3_RIGHT vec3(1, 0, 0)
+#define VEC3_FORWARD vec3(0, 0, 1)
+#define VEC3_BACK vec3(0, 0, -1)
 
-#define qua_identity quaternion(1,0,0,0)
+#define QUA_IDENTITY quaternion(1,0,0,0)

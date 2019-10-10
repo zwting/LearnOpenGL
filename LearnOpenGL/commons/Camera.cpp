@@ -1,21 +1,22 @@
 ﻿#include "Camera.h"
 #include <glm/glm.hpp>
 
+
+
 Camera::Camera(vec3 pos, vec3 target, float fov, float aspect, float near, float far, vec3 up)
 {
-	this->mNode = new Node(pos, qua_identity);
+	this->mNode = new Node(pos, QUA_IDENTITY);
 	this->mFov = fov;
 	this->mNear = near;
 	this->mFar = far;
 	this->mUp = up;
 	this->mAspect = aspect;
-
-	this->mIsViewDirty = true;
-
-	mViewMatrix = mat_identity;
+	this->mTarget = target;
+	
+	mViewMatrix = MAT_IDENTITY;
+	mNode->SetDirtyCallback(std::bind(&Camera::OnNodeDirty,this));
 
 	LookAt(target, up);
-
 	mProjMatrix = glm::perspective(
 		glm::radians(fov),
 		aspect,
@@ -38,19 +39,13 @@ const mat4x4& Camera::GetProjMatrix() const
 	return mProjMatrix;
 }
 
-void Camera::LookAt(const vec3& target, const vec3& worldUp)
+void Camera::LookAt(const vec3& target, const vec3& worldUp) const
 {
-	this->mUp = worldUp;
-	const vec3 pos = mNode->GetPosition();
-	// viewMatrix = glm::lookAt(target, pos, worldUp);
-	const vec3 forward = glm::normalize(pos - target);
-	const vec3 right = glm::cross(this->mUp, forward);
-	const vec3 up = glm::cross(forward, right);
+	mNode->LookAt(target, worldUp);
+}
 
-	this->mNode->SetForward(forward);
-	this->mNode->SetRight(right);
-	this->mNode->SetUp(up);
-
+void Camera::OnNodeDirty()
+{
 	mIsViewDirty = true;
 }
 
@@ -58,7 +53,6 @@ void Camera::LookAt(const vec3& target, const vec3& worldUp)
 void Camera::UpdateViewMatrix()
 {
 	const vec3 pos = mNode->GetPosition();
-
 	const vec3 right = mNode->GetRight();
 	const vec3 up = mNode->GetUp();
 	const vec3 forward = mNode->GetForward();
@@ -84,6 +78,7 @@ void Camera::UpdateViewMatrix()
 
 void Camera::Rotate(const quaternion& q)
 {
-	mNode->SetRotation(q);
+	const auto oldRot = mNode->GetRotation();
+	mNode->SetRotation(oldRot * q);
 	mIsViewDirty = true;
 }
