@@ -4,43 +4,43 @@
 class Texture
 {
 public:
-	GLint width() const
+	GLint GetWidth() const
 	{
-		return _width;
+		return mWidth;
 	}
 
-	GLint height() const
+	GLint GetHeight() const
 	{
-		return _height;
+		return mHeight;
 	}
 
-	unsigned char* data() const
+	unsigned char* GetData() const
 	{
-		return _data;
+		return mData;
 	}
 
-	GLint channels() const
+	GLint GetChannels() const
 	{
-		return _channels;
+		return mChannels;
 	}
 
-	GLuint id() const
+	GLuint GetID() const
 	{
-		return _id;
+		return mId;
 	}
 
 private:
-	GLint _width;
-	GLint _height;
-	unsigned char* _data;
-	GLint _channels;
-	GLuint _id;
+	GLint mWidth;
+	GLint mHeight;
+	unsigned char* mData;
+	GLint mChannels;
+	GLuint mId;
 
-	void _free();
+	void Free();
 
 public:
 	Texture(const GLchar* path, bool isFlipY = true);
 	~Texture();
 
-	void Use() { glBindTexture(GL_TEXTURE_2D, _id); }
+	void Use() { glBindTexture(GL_TEXTURE_2D, mId); }
 };

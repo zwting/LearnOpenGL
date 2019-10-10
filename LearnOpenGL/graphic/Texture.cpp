@@ -3,19 +3,19 @@
 #include "stb_image.h"
 #include <iostream>
 
-void Texture::_free()
+void Texture::Free()
 {
-	if (_data != nullptr)
+	if (mData != nullptr)
 	{
-		stbi_image_free(_data);
-		_data = nullptr;
+		stbi_image_free(mData);
+		mData = nullptr;
 	}
 }
 
 Texture::Texture(const GLchar* path, bool isFlipY)
 {
-	glGenTextures(1, &_id);
-	glBindTexture(GL_TEXTURE_2D, _id);
+	glGenTextures(1, &mId);
+	glBindTexture(GL_TEXTURE_2D, mId);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -23,10 +23,10 @@ Texture::Texture(const GLchar* path, bool isFlipY)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	stbi_set_flip_vertically_on_load(isFlipY);
-	this->_data = stbi_load(path, &_width, &_height, &_channels, 0);
-	if (_data)
+	this->mData = stbi_load(path, &mWidth, &mHeight, &mChannels, 0);
+	if (mData)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, _data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWidth, mHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, mData);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -34,10 +34,10 @@ Texture::Texture(const GLchar* path, bool isFlipY)
 	{
 		std::cout << "Failed to load texture" << std::endl;
 	}
-	_free();
+	Free();
 }
 
 Texture::~Texture()
 {
-	_free();
+	Free();
 }

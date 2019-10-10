@@ -7,26 +7,26 @@
 class Model
 {
 private:
-	std::vector<Mesh*> meshList;
-	std::vector<MeshTexture> textureList;
-	std::string modelPath;
+	std::vector<Mesh*> mMeshList;
+	std::vector<MeshTexture> mTextureList;
+	std::string mModelPath;
 
-	void loadModel(std::string path);
-	void processNode(aiNode* node, const aiScene* scene);
-	Mesh* processMesh(aiMesh* mesh, const aiScene* scene);
-	std::vector<MeshTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type,
+	void LoadModel(std::string path);
+	void ProcessNode(aiNode* node, const aiScene* scene);
+	Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
+	std::vector<MeshTexture> LoadMaterialTextures(aiMaterial* mat, aiTextureType type,
 	                                              MeshTexture::TextureType meshTextureType);
-	bool isLoadedTexture(const std::string path);
+	bool IsLoadedTexture(const std::string& path);
 public:
-	std::vector<Mesh*> getMeshList() const
+	std::vector<Mesh*> GetMeshList() const
 	{
-		return meshList;
+		return mMeshList;
 	}
 
 public:
 	Model(std::string path)
 	{
-		loadModel(path);
+		LoadModel(path);
 	}
 
 	void Render(const Shader* pShader);

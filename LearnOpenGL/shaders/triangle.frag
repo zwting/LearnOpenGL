@@ -19,6 +19,6 @@ void main()
 	vec4 c = texture(texture0, TexCoord);
 	vec3 lightDir = normalize(light0_dir);
 	vec3 normal = normalize(FragNormal);
-	float diffuse = dot(normal, lightDir);
+	float diffuse = max(dot(normal, lightDir), 0) * 0.5 + 0.5;
 	FragColor = vec4(c.rgb * diffuse, 1.0);
 }

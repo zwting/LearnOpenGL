@@ -2,7 +2,7 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 
-void Model::loadModel(std::string path)
+void Model::LoadModel(std::string path)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -13,24 +13,24 @@ void Model::loadModel(std::string path)
 		return;
 	}
 
-	modelPath = path.substr(0, path.find_last_of('/'));
-	processNode(scene->mRootNode, scene);
+	mModelPath = path.substr(0, path.find_last_of('/'));
+	ProcessNode(scene->mRootNode, scene);
 }
 
-void Model::processNode(aiNode* node, const aiScene* scene)
+void Model::ProcessNode(aiNode* node, const aiScene* scene)
 {
 	for (unsigned int i = 0; i < node->mNumMeshes; ++i)
 	{
-		meshList.push_back(processMesh(scene->mMeshes[node->mMeshes[i]], scene));
+		mMeshList.push_back(ProcessMesh(scene->mMeshes[node->mMeshes[i]], scene));
 	}
 
 	for (size_t i = 0; i < node->mNumChildren; ++i)
 	{
-		processNode(node->mChildren[i], scene);
+		ProcessNode(node->mChildren[i], scene);
 	}
 }
 
-Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
+Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
@@ -40,26 +40,26 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	{
 		const auto vertex = mesh->mVertices[i];
 		Vertex v;
-		v.position.x = vertex.x;
-		v.position.y = vertex.y;
-		v.position.z = vertex.z;
+		v.Position.x = vertex.x;
+		v.Position.y = vertex.y;
+		v.Position.z = vertex.z;
 
 		if (mesh->HasNormals())
 		{
 			const auto normal = mesh->mNormals[i];
-			v.normal.x = normal.x;
-			v.normal.y = normal.y;
-			v.normal.z = normal.z;
+			v.Normal.x = normal.x;
+			v.Normal.y = normal.y;
+			v.Normal.z = normal.z;
 		}
 
 		if (mesh->mTextureCoords[0])
 		{
-			v.texcoord.x = mesh->mTextureCoords[0][i].x;
-			v.texcoord.y = mesh->mTextureCoords[0][i].y;
+			v.Texcoord.x = mesh->mTextureCoords[0][i].x;
+			v.Texcoord.y = mesh->mTextureCoords[0][i].y;
 		}
 		else
 		{
-			v.texcoord = vec2(0, 0);
+			v.Texcoord = vec2(0, 0);
 		}
 		vertices.push_back(v);
 	}
@@ -78,7 +78,7 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	if (mesh->mMaterialIndex >= 0)
 	{
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		std::vector<MeshTexture> diffuseTextures = loadMaterialTextures(
+		std::vector<MeshTexture> diffuseTextures = LoadMaterialTextures(
 			material,
 			aiTextureType_DIFFUSE,
 			MeshTexture::TextureType::Diffuse
@@ -86,7 +86,7 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
 		textures.insert(textures.end(), diffuseTextures.begin(), diffuseTextures.end());
 
-		std::vector<MeshTexture> specularTextures = loadMaterialTextures(
+		std::vector<MeshTexture> specularTextures = LoadMaterialTextures(
 			material,
 			aiTextureType_SPECULAR,
 			MeshTexture::TextureType::Specular
@@ -94,7 +94,7 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
 		textures.insert(textures.end(), specularTextures.begin(), specularTextures.end());
 
-		std::vector<MeshTexture> normalTextures = loadMaterialTextures(
+		std::vector<MeshTexture> normalTextures = LoadMaterialTextures(
 			material,
 			aiTextureType_SPECULAR,
 			MeshTexture::TextureType::Specular
@@ -106,7 +106,7 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 	return new Mesh(vertices, indices, textures);
 }
 
-std::vector<MeshTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type,
+std::vector<MeshTexture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureType type,
                                                      MeshTexture::TextureType meshTextureType)
 {
 	std::vector<MeshTexture> textures;
@@ -114,23 +114,23 @@ std::vector<MeshTexture> Model::loadMaterialTextures(aiMaterial* mat, aiTextureT
 	{
 		aiString str;
 		mat->GetTexture(type, i, &str);
-		if(isLoadedTexture(str.C_Str()))
+		if(IsLoadedTexture(str.C_Str()))
 		{
 			continue;
 		}
 		MeshTexture texture(str.C_Str(), meshTextureType);
 		textures.push_back(texture);
-		textureList.push_back(texture);
+		mTextureList.push_back(texture);
 	}
 	return textures;
 }
 
 //参数指定的路径的纹理是否已经加载过
-bool Model::isLoadedTexture(const std::string path)
+bool Model::IsLoadedTexture(const std::string& path)
 {
-	for(size_t i = 0;i<textureList.size();++i)
+	for(size_t i = 0;i<mTextureList.size();++i)
 	{
-		if(textureList[i].path == path)
+		if(mTextureList[i].Path == path)
 		{
 			return true;
 		}
@@ -141,8 +141,8 @@ bool Model::isLoadedTexture(const std::string path)
 
 void Model::Render(const Shader* pShader)
 {
-	for (unsigned int i = 0; i < meshList.size(); ++i)
+	for (unsigned int i = 0; i < mMeshList.size(); ++i)
 	{
-		meshList[i]->Render(pShader);
+		mMeshList[i]->Render(pShader);
 	}
 }

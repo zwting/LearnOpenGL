@@ -6,21 +6,21 @@
 class Shader
 {
 private:
-	std::string _vertexSrc;
-	std::string _fragSrc;
+	std::string mVertexSrc;
+	std::string mFragSrc;
 
-	GLuint _vertexID;
-	GLuint _fragmentID;
-	GLuint _program;
+	GLuint mVertexID;
+	GLuint mFragmentID;
+	GLuint mProgram;
 
 public:
-	GLuint program() const
+	GLuint GetProgram() const
 	{
-		return _program;
+		return mProgram;
 	}
 
 private:
-	char _logBuffer[256];
+	char mLogBuffer[256];
 
 private:
 	bool Compile(GLuint shaderID, const char* src);

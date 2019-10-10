@@ -5,59 +5,59 @@
 class Camera
 {
 private:
-	Node* node;
+	Node* mNode;
 
-	vec3 up;
+	vec3 mUp;
 
-	float fov;
-	float near;
-	float far;
-	float aspect;
+	float mFov;
+	float mNear;
+	float mFar;
+	float mAspect;
 
-	bool isViewDirty;
-	bool isProjDirty;
+	bool mIsViewDirty;
+	bool mIsProjDirty;
 
-	mat4x4 viewMatrix{};
-	mat4x4 projMatrix{};
+	mat4x4 mViewMatrix{};
+	mat4x4 mProjMatrix{};
 
 public:
-	Node* getNode() const
+	Node* GetNode() const
 	{
-		return node;
+		return mNode;
 	}
 
-	vec3 getPosition() const
+	vec3 GetPosition() const
 	{
-		return node->getPosition();
+		return mNode->GetPosition();
 	}
 
-	void setPosition(vec3 vec)
+	void SetPosition(vec3 vec)
 	{
-		isViewDirty = true;
-		node->setPosition(vec);
+		mIsViewDirty = true;
+		mNode->SetPosition(vec);
 	}
 
-	vec3 getUp() const
+	vec3 GetUp() const
 	{
-		return node->getUp();
+		return mNode->GetUp();
 	}
 
-	vec3 getRight() const
+	vec3 GetRight() const
 	{
-		return node->getRight();
+		return mNode->GetRight();
 	}
 
-	vec3 getForward()const
+	vec3 GetForward()const
 	{
-		return -node->getForward();
+		return -mNode->GetForward();
 	}
 
 
 public:
 	Camera(vec3 pos, vec3 target, float fov, float aspect, float near, float far, vec3 worldUp = vec3_up);
-	const mat4x4& getViewMatrix();
-	const mat4x4& getProjMatrix() const;
-	void lookAt(const vec3& target, const vec3& worldUp = vec3_up);
-	void updateViewMatrix();
-	void rotate(const quaternion& q);
+	const mat4x4& GetViewMatrix();
+	const mat4x4& GetProjMatrix() const;
+	void LookAt(const vec3& target, const vec3& worldUp = vec3_up);
+	void UpdateViewMatrix();
+	void Rotate(const quaternion& q);
 };

@@ -9,7 +9,7 @@ Node* PrimitiveModel::CreatePrimitive(const PrimitiveType type)
 	{
 	case PrimitiveType::Cube:
 		ret = new Node(vec3_zero, qua_identity);
-		ret->setModel(GetModel(type));
+		ret->SetModel(GetModel(type));
 		break;
 	}
 

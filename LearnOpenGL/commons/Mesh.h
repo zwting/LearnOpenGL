@@ -8,9 +8,9 @@
 
 struct Vertex
 {
-	vec3 position;
-	vec3 normal;
-	vec2 texcoord;
+	vec3 Position;
+	vec3 Normal;
+	vec2 Texcoord;
 };
 
 struct MeshTexture
@@ -23,15 +23,15 @@ struct MeshTexture
 		Height,
 	};
 
-	Texture* texture;
-	TextureType type;
-	std::string path;
+	Texture* pTexture;
+	TextureType Type;
+	std::string Path;
 
 	MeshTexture(std::string texturePath, TextureType textureType = TextureType::Diffuse)
-		: type(textureType),
-		  path(texturePath)
+		: Type(textureType),
+		  Path(texturePath)
 	{
-		texture = new Texture(path.c_str());
+		pTexture = new Texture(Path.c_str());
 	}
 };
 
@@ -39,15 +39,15 @@ struct MeshTexture
 class Mesh
 {
 public:
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-	std::vector<MeshTexture> textures;
+	std::vector<Vertex> mVertices;
+	std::vector<unsigned int> mIndices;
+	std::vector<MeshTexture> mTextures;
 
 	Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<MeshTexture> textures);
 	void Render(const Shader* shader);
 	void AddTexture(MeshTexture texture);
 
 private:
-	unsigned int VAO, VBO, EBO;
+	unsigned int mVAO, mVBO, mEBO;
 	void SetupMesh();
 };

@@ -6,139 +6,139 @@
 class Node
 {
 private:
-	quaternion rotation;
-	vec3 position;
-	vec3 scale;
+	quaternion mRotation;
+	vec3 mPosition;
+	vec3 mScale;
 
 
 private:
-	vec3 forward{};
-	vec3 right{};
-	vec3 up{};
+	vec3 mForward{};
+	vec3 mRight{};
+	vec3 mUp{};
 
-	bool isTransformDirty{};
+	bool mIsTransformDirty{};
 
-	mat4x4 modelMatrix{};
+	mat4x4 mModelMatrix{};
 
-	Model* model;
+	Model* mpModel;
 public:
-	vec3 getScale() const
+	vec3 GetScale() const
 	{
-		return scale;
+		return mScale;
 	}
 
-	void setScale(const vec3& scale)
+	void SetScale(const vec3& scale)
 	{
-		isTransformDirty = true;
-		this->scale = scale;
+		mIsTransformDirty = true;
+		this->mScale = scale;
 	}
 
-	Model* getModel() const
+	Model* GetModel() const
 	{
-		return model;
+		return mpModel;
 	}
 
-	void setModel(Model* model)
+	void SetModel(Model* model)
 	{
-		this->model = model;
+		this->mpModel = model;
 	}
 
-	const mat4x4& getModelMatrix()
+	const mat4x4& GetModelMatrix()
 	{
-		checkTransformIsDirty();
-		return this->modelMatrix;
+		CheckTransformIsDirty();
+		return this->mModelMatrix;
 	}
 
-	quaternion getRotation() const
+	quaternion GetRotation() const
 	{
-		return rotation;
+		return mRotation;
 	}
 
-	vec3 getPosition() const
+	vec3 GetPosition() const
 	{
-		return position;
+		return mPosition;
 	}
 
-	void setRotation(quaternion rotation)
+	void SetRotation(quaternion rot)
 	{
-		isTransformDirty = true;
-		this->rotation = glm::normalize(rotation);
+		mIsTransformDirty = true;
+		this->mRotation = glm::normalize(rot);
 	}
 
-	void setPosition(const vec3& position)
+	void SetPosition(const vec3& position)
 	{
-		isTransformDirty = true;
-		this->position = position;
+		mIsTransformDirty = true;
+		this->mPosition = position;
 	}
 
-	void setPosition(float x, float y, float z)
+	void SetPosition(float x, float y, float z)
 	{
-		isTransformDirty = true;
-		this->position.x = x;
-		this->position.y = y;
-		this->position.z = z;
+		mIsTransformDirty = true;
+		this->mPosition.x = x;
+		this->mPosition.y = y;
+		this->mPosition.z = z;
 	}
 
-	vec3 getForward()
+	vec3 GetForward()
 	{
-		checkTransformIsDirty();
-		return forward;
+		CheckTransformIsDirty();
+		return mForward;
 	}
 
-	void setForward(const vec3& forward)
+	void SetForward(const vec3& forward)
 	{
-		isTransformDirty = true;
-		this->forward = forward;
+		mIsTransformDirty = true;
+		this->mForward = forward;
 	}
 
-	vec3 getRight()
+	vec3 GetRight()
 	{
-		checkTransformIsDirty();
-		return right;
+		CheckTransformIsDirty();
+		return mRight;
 	}
-	void setRight(const vec3& right)
+	void SetRight(const vec3& right)
 	{
-		isTransformDirty = true;
-		this->right = right;
+		mIsTransformDirty = true;
+		this->mRight = right;
 	}
 
-	vec3 getUp()
+	vec3 GetUp()
 	{
-		checkTransformIsDirty();
-		return up;
+		CheckTransformIsDirty();
+		return mUp;
 	}
-	void setUp(const vec3& up)
+	void SetUp(const vec3& up)
 	{
-		isTransformDirty = true;
-		this->up = up;
+		mIsTransformDirty = true;
+		this->mUp = up;
 	}
 
 private:
 	//检查transform是否需要更新
-	void checkTransformIsDirty()
+	void CheckTransformIsDirty()
 	{
-		if(isTransformDirty)
+		if(mIsTransformDirty)
 		{
-			calcModelMatrix();
+			CalcModelMatrix();
 		}
 	}
 
 public:
 	Node(vec3 pos, quaternion rot)
 		:
-		rotation(rot),
-		position(pos)
+		mRotation(rot),
+		mPosition(pos)
 	{
-		modelMatrix = mat_identity;
-		isTransformDirty = true;
-		scale = vec3_one;
+		mModelMatrix = mat_identity;
+		mIsTransformDirty = true;
+		mScale = vec3_one;
 
-		calcModelMatrix();
+		CalcModelMatrix();
 	}
 
 	~Node();
 
-	void calcModelMatrix();
+	void CalcModelMatrix();
 
 	void Rotate(const quaternion& q);
 
@@ -146,10 +146,10 @@ public:
 
 	void Render(Shader* shader)
 	{
-		if(model)
+		if(mpModel)
 		{
-			shader->SetMat4vf("model",value_ptr(getModelMatrix()));
-			model->Render(shader);
+			shader->SetMat4vf("model",value_ptr(GetModelMatrix()));
+			mpModel->Render(shader);
 		}
-	};
+	}
 };

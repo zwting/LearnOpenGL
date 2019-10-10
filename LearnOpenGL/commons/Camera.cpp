@@ -3,20 +3,20 @@
 
 Camera::Camera(vec3 pos, vec3 target, float fov, float aspect, float near, float far, vec3 up)
 {
-	this->node = new Node(pos, qua_identity);
-	this->fov = fov;
-	this->near = near;
-	this->far = far;
-	this->up = up;
-	this->aspect = aspect;
+	this->mNode = new Node(pos, qua_identity);
+	this->mFov = fov;
+	this->mNear = near;
+	this->mFar = far;
+	this->mUp = up;
+	this->mAspect = aspect;
 
-	this->isViewDirty = true;
+	this->mIsViewDirty = true;
 
-	viewMatrix = mat_identity;
+	mViewMatrix = mat_identity;
 
-	lookAt(target, up);
+	LookAt(target, up);
 
-	projMatrix = glm::perspective(
+	mProjMatrix = glm::perspective(
 		glm::radians(fov),
 		aspect,
 		near,
@@ -24,66 +24,66 @@ Camera::Camera(vec3 pos, vec3 target, float fov, float aspect, float near, float
 	);
 }
 
-const mat4x4& Camera::getViewMatrix()
+const mat4x4& Camera::GetViewMatrix()
 {
-	if (isViewDirty)
+	if (mIsViewDirty)
 	{
-		updateViewMatrix();
+		UpdateViewMatrix();
 	}
-	return viewMatrix;
+	return mViewMatrix;
 }
 
-const mat4x4& Camera::getProjMatrix() const
+const mat4x4& Camera::GetProjMatrix() const
 {
-	return projMatrix;
+	return mProjMatrix;
 }
 
-void Camera::lookAt(const vec3& target, const vec3& worldUp)
+void Camera::LookAt(const vec3& target, const vec3& worldUp)
 {
-	this->up = worldUp;
-	const vec3 pos = node->getPosition();
+	this->mUp = worldUp;
+	const vec3 pos = mNode->GetPosition();
 	// viewMatrix = glm::lookAt(target, pos, worldUp);
 	const vec3 forward = glm::normalize(pos - target);
-	const vec3 right = glm::cross(this->up, forward);
+	const vec3 right = glm::cross(this->mUp, forward);
 	const vec3 up = glm::cross(forward, right);
 
-	this->node->setForward(forward);
-	this->node->setRight(right);
-	this->node->setUp(up);
+	this->mNode->SetForward(forward);
+	this->mNode->SetRight(right);
+	this->mNode->SetUp(up);
 
-	isViewDirty = true;
+	mIsViewDirty = true;
 }
 
 //由相机的view矩阵来驱动更新node 的 model矩阵
-void Camera::updateViewMatrix()
+void Camera::UpdateViewMatrix()
 {
-	const vec3 pos = node->getPosition();
+	const vec3 pos = mNode->GetPosition();
 
-	const vec3 right = node->getRight();
-	const vec3 up = node->getUp();
-	const vec3 forward = node->getForward();
+	const vec3 right = mNode->GetRight();
+	const vec3 up = mNode->GetUp();
+	const vec3 forward = mNode->GetForward();
 
-	viewMatrix[0][0] = right.x;
-	viewMatrix[1][0] = right.y;
-	viewMatrix[2][0] = right.z;
+	mViewMatrix[0][0] = right.x;
+	mViewMatrix[1][0] = right.y;
+	mViewMatrix[2][0] = right.z;
 
-	viewMatrix[0][1] = up.x;
-	viewMatrix[1][1] = up.y;
-	viewMatrix[2][1] = up.z;
+	mViewMatrix[0][1] = up.x;
+	mViewMatrix[1][1] = up.y;
+	mViewMatrix[2][1] = up.z;
 
-	viewMatrix[0][2] = forward.x;
-	viewMatrix[1][2] = forward.y;
-	viewMatrix[2][2] = forward.z;
+	mViewMatrix[0][2] = forward.x;
+	mViewMatrix[1][2] = forward.y;
+	mViewMatrix[2][2] = forward.z;
 
-	viewMatrix[3][0] = -glm::dot(right, pos);
-	viewMatrix[3][1] = -glm::dot(up, pos);
-	viewMatrix[3][2] = -glm::dot(forward, pos);
+	mViewMatrix[3][0] = -glm::dot(right, pos);
+	mViewMatrix[3][1] = -glm::dot(up, pos);
+	mViewMatrix[3][2] = -glm::dot(forward, pos);
 
-	isViewDirty = false;
+	mIsViewDirty = false;
 }
 
-void Camera::rotate(const quaternion& q)
+void Camera::Rotate(const quaternion& q)
 {
-	// forward = glm::normalize(q * forward);
-	// isViewDirty = true;
+	mNode->SetRotation(q);
+	mIsViewDirty = true;
 }

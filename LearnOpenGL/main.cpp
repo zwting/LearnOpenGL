@@ -29,7 +29,7 @@ Shader* p_shader;
 
 Camera* g_pCamera;
 Node* cube;
-vec3 lightDir(-1,-1,1);
+vec3 lightDir(1, 0, 0);
 
 
 void InitData();
@@ -79,11 +79,12 @@ void InitData()
 	);
 
 	cube = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Cube);
-	cube->setRotation(glm::angleAxis(glm::radians(45.0f), vec3_up));
-	auto modelCube = cube->getModel();
+	cube->SetPosition(vec3(1, 1, -3));
+	// cube->setRotation(glm::angleAxis(glm::radians(45.0f), vec3_up));
+	auto modelCube = cube->GetModel();
 	if (modelCube)
 	{
-		const auto meshes = modelCube->getMeshList();
+		const auto meshes = modelCube->GetMeshList();
 		if (!meshes.empty())
 		{
 			meshes[0]->AddTexture(MeshTexture("resources/texture/brick.jpg"));
@@ -96,8 +97,8 @@ void InitData()
 
 	p_shader->Use();
 
-	p_shader->SetMat4vf("proj",value_ptr(g_pCamera->getProjMatrix()));
-	p_shader->SetMat4vf("view",value_ptr(g_pCamera->getViewMatrix()));
+	p_shader->SetMat4vf("proj",value_ptr(g_pCamera->GetProjMatrix()));
+	p_shader->SetMat4vf("view",value_ptr(g_pCamera->GetViewMatrix()));
 	p_shader->SetVec3("light0_dir", lightDir);
 
 
@@ -129,7 +130,13 @@ void Render()
 
 void Update(float dt)
 {
-	p_shader->SetMat4vf("view",value_ptr(g_pCamera->getViewMatrix()));
+	p_shader->SetMat4vf("view",value_ptr(g_pCamera->GetViewMatrix()));
+	float speed = 30;
+	static float angle = 0;
+	angle += speed * dt;
+	auto q = glm::angleAxis(glm::radians(angle), vec3_up);
+	std::cout << "angle=" << angle << ", deltaTime=" << dt << ",fps:" << 1 / dt << std::endl;
+	cube->SetRotation(q);
 }
 
 
@@ -148,8 +155,6 @@ void FrameBufferSizeCallback(GLFWwindow* window, int width, int height)
 //获取鼠标光标位置
 void CursorPosCallback(GLFWwindow* win, double x, double y)
 {
-	// std::cout << '(' << x << ',' << y << ')' << std::endl;
-
 	//计算相机方向
 	static float yaw = 0;
 	static float pitch = 0;
@@ -162,11 +167,11 @@ void CursorPosCallback(GLFWwindow* win, double x, double y)
 	prevPos.x = x;
 	prevPos.y = y;
 
-	std::cout << delta.x << ", " << delta.y << std::endl;
+	// std::cout << delta.x << ", " << delta.y << std::endl;
 	quaternion qx = glm::angleAxis(glm::radians(delta.x),vec3_up);
 	quaternion qy = glm::angleAxis(glm::radians(delta.y),vec3_right);
 
-	g_pCamera->rotate(qx * qy);
+	g_pCamera->Rotate(qx * qy);
 }
 
 void ScrollCallback(GLFWwindow* win, double offsetX, double offsetY)
@@ -181,44 +186,44 @@ void ProcessInput(GLFWwindow* win)
 	}
 
 	static float moveSpd = 5.0f;
-	auto cameraPos = g_pCamera->getPosition();
-	auto node = g_pCamera->getNode();
+	auto cameraPos = g_pCamera->GetPosition();
+	auto node = g_pCamera->GetNode();
 	bool isMove = false;
 	if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * g_pCamera->getForward();
+		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * g_pCamera->GetForward();
 		isMove = true;
 	}
 	else if (glfwGetKey(win, GLFW_KEY_A) == GLFW_PRESS)
 	{
 		// cameraPos += moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, node->getForward());
-		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * node->getRight();
+		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * node->GetRight();
 		isMove = true;
 	}
 	else if (glfwGetKey(win,GLFW_KEY_S) == GLFW_PRESS)
 	{
-		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * g_pCamera->getForward();
+		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * g_pCamera->GetForward();
 		isMove = true;
 	}
 	else if (glfwGetKey(win,GLFW_KEY_D) == GLFW_PRESS)
 	{
 		// cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * glm::cross(vec3_up, node->getForward());
-		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * node->getRight();
+		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * node->GetRight();
 		isMove = true;
 	}
 	else if (glfwGetKey(win, GLFW_KEY_KP_8) == GLFW_PRESS)
 	{
-		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * node->getUp();
+		cameraPos += moveSpd * CommonUtils::s_time->deltaTime * node->GetUp();
 		isMove = true;
 	}
 	else if(glfwGetKey(win, GLFW_KEY_KP_5) ==GLFW_PRESS)
 	{
-		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * node->getUp();
+		cameraPos -= moveSpd * CommonUtils::s_time->deltaTime * node->GetUp();
 		isMove = true;
 	}
 	if (isMove)
 	{
-		g_pCamera->setPosition(cameraPos);
+		g_pCamera->SetPosition(cameraPos);
 	}
 }
 

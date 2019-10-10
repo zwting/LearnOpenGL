@@ -1,31 +1,34 @@
 ﻿#include "Node.h"
 #include "glm/gtx/quaternion.hpp"
+#include "CommonUtils.h"
 
 Node::~Node()
 {
-	if (model)
+	if (mpModel)
 	{
-		delete model;
-		model = nullptr;
+		delete mpModel;
+		mpModel = nullptr;
 	}
 }
 
-void Node::calcModelMatrix()
+void Node::CalcModelMatrix()
 {
-	forward = rotation * vec3_forward;
-	up = rotation * vec3_up;
-	right = rotation * vec3_right;
+	mForward = mRotation * -vec3_forward;
+	mUp = mRotation * vec3_up;
+	mRight = mRotation * vec3_right;
 
-	modelMatrix = glm::translate(modelMatrix, position);
-	mat4x4 matRot = glm::toMat4(rotation);
-	modelMatrix *= matRot;
-	modelMatrix = glm::scale(modelMatrix, scale);
+	CommonUtils::IdentityMat(mModelMatrix);
 
-	isTransformDirty = false;
+	mModelMatrix = glm::translate(mModelMatrix, mPosition);
+	mat4x4 matRot = glm::toMat4(mRotation);
+	mModelMatrix *= matRot;
+	mModelMatrix = glm::scale(mModelMatrix, mScale);
+
+	mIsTransformDirty = false;
 }
 
 void Node::Rotate(const quaternion& q)
 {
-	rotation *= glm::normalize(q);
-	calcModelMatrix();
+	// rotation = glm::normalize(q) * rotation;
+	// calcModelMatrix();
 }
