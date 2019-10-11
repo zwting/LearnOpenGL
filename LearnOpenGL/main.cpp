@@ -28,8 +28,8 @@ GLuint VAO, VBO;
 Shader* p_shader;
 
 Camera* g_pCamera;
-Node* cube;
 vec3 lightDir(1, 1, 1);
+std::vector<Node*> nodeList;
 
 
 void InitData();
@@ -78,22 +78,39 @@ void InitData()
 		100.0f
 	);
 
-	cube = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Cube);
-	cube->SetPosition(vec3(1, 1, -3));
-	// cube->setRotation(glm::angleAxis(glm::radians(45.0f), vec3_up));
-	auto modelCube = cube->GetModel();
-	if (modelCube)
+	vec3 cubePositions[] = {
+		vec3(0.0f, 0.0f, 0.0f),
+		vec3(2.0f, 5.0f, -15.0f),
+		vec3(-1.5f, -2.2f, -2.5f),
+		vec3(-3.8f, -2.0f, -12.3f),
+		vec3(2.4f, -0.4f, -3.5f),
+		vec3(-1.7f, 3.0f, -7.5f),
+		vec3(1.3f, -2.0f, -2.5f),
+		vec3(1.5f, 2.0f, -2.5f),
+		vec3(1.5f, 0.2f, -1.5f),
+		vec3(-1.3f, 1.0f, -1.5f)
+	};
+
+	for (int i = 0; i < 10; ++i)
 	{
-		const auto meshes = modelCube->GetMeshList();
-		if (!meshes.empty())
+		auto cube = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Cube);
+		cube->SetPosition(cubePositions[i]);
+		cube->SetRotation(glm::angleAxis(glm::radians((i + 1) * 20.0f), VEC3_ONE));
+
+		auto modelCube = cube->GetModel();
+		if (modelCube)
 		{
-			meshes[0]->AddTexture(MeshTexture("resources/texture/brick.jpg"));
+			const auto meshes = modelCube->GetMeshList();
+			if (!meshes.empty())
+			{
+				meshes[0]->AddTexture(MeshTexture("resources/texture/brick.jpg"));
+			}
 		}
+
+		nodeList.push_back(cube);
 	}
 
 	p_shader = new Shader("shaders/triangle.vert", "shaders/triangle.frag");
-	// p_shader->AddTexture(pTexture_1);
-	// p_shader->AddTexture(pTexture_2);
 
 	p_shader->Use();
 
@@ -102,22 +119,8 @@ void InitData()
 	p_shader->SetVec3("light0_dir", lightDir);
 
 
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glEnable(GL_DEPTH_TEST);
 }
-
-vec3 cubePositions[] = {
-	vec3(0.0f, 0.0f, 0.0f),
-	vec3(2.0f, 5.0f, -15.0f),
-	vec3(-1.5f, -2.2f, -2.5f),
-	vec3(-3.8f, -2.0f, -12.3f),
-	vec3(2.4f, -0.4f, -3.5f),
-	vec3(-1.7f, 3.0f, -7.5f),
-	vec3(1.3f, -2.0f, -2.5f),
-	vec3(1.5f, 2.0f, -2.5f),
-	vec3(1.5f, 0.2f, -1.5f),
-	vec3(-1.3f, 1.0f, -1.5f)
-};
 
 
 //渲染
@@ -125,7 +128,10 @@ void Render()
 {
 	float t = CommonUtils::s_time->time;
 	float greenVal = sin(t) * 0.5f + 0.5f;
-	cube->Render(p_shader);
+	for (int i = 0; i < nodeList.size(); ++i)
+	{
+		nodeList[i]->Render(p_shader);
+	}
 }
 
 void Update(float dt)
@@ -136,7 +142,7 @@ void Update(float dt)
 	angle += speed * dt;
 	auto q = glm::angleAxis(glm::radians(angle), VEC3_UP);
 	// std::cout << "angle=" << angle << ", deltaTime=" << dt << ",fps:" << 1 / dt << std::endl;
-	cube->SetRotation(q);
+	// cube->SetRotation(q);
 }
 
 
@@ -163,16 +169,18 @@ void CursorPosCallback(GLFWwindow* win, double x, double y)
 	prevPos.x = x;
 	prevPos.y = y;
 
+	delta *= -1;
+
 	quaternion qx = glm::angleAxis(glm::radians(delta.x), g_pCamera->GetNode()->GetUp());
 	quaternion qy = glm::angleAxis(glm::radians(delta.y), g_pCamera->GetNode()->GetRight());
 
 	vec3 forward = g_pCamera->GetForward();
 
-	std::cout << "forward= (" << forward.x << ", " << forward.y << ", " << forward.z << ")" << std::endl;
+	std::cout << "(" << delta.x << ", " << delta.y << ")\n";
 
-	forward = qy * qx * forward;
+	forward = qx * qy * forward;
 
-	vec3 target = g_pCamera->GetNode()->GetPosition() + forward * 5.0f;
+	vec3 target = g_pCamera->GetNode()->GetPosition() + forward * 10.0f;
 	g_pCamera->LookAt(target);
 	// std::cout << "target = (" << target.x << ", " << target.y << ", " << target.z << ")" << std::endl;
 }
