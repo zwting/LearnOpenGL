@@ -21,6 +21,31 @@ public:
 		return buffer.str();
 	}
 
+	static std::string CombinePath(const std::string& path, const std::string& fileName)
+	{
+		if (!path.empty() && !fileName.empty())
+		{
+			char lastOfPath = path[path.size() - 1];
+			if (lastOfPath == '\\' || lastOfPath == '/')
+			{
+				return path + fileName;
+			}
+			return path + '/' + fileName;
+		}
+
+		if (path.empty())
+		{
+			return fileName;
+		}
+
+		if(fileName.empty())
+		{
+			return path;
+		}
+
+		return nullptr;
+	}
+
 	static float Clamp01(float val)
 	{
 		return Clamp(val, 0, 1);

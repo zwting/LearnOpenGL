@@ -110,6 +110,12 @@ void InitData()
 		nodeList.push_back(cube);
 	}
 
+	Model* soldier = new Model("resources/model/nanosuit/nanosuit.obj");
+	Node* node = new Node(VEC3_ZERO, QUA_IDENTITY);
+	node->SetModel(soldier);
+	node->SetScale(VEC3_ONE * 0.5f);
+	nodeList.push_back(node);
+
 	p_shader = new Shader("shaders/triangle.vert", "shaders/triangle.frag");
 
 	p_shader->Use();
@@ -126,8 +132,6 @@ void InitData()
 //渲染
 void Render()
 {
-	float t = CommonUtils::s_time->time;
-	float greenVal = sin(t) * 0.5f + 0.5f;
 	for (int i = 0; i < nodeList.size(); ++i)
 	{
 		nodeList[i]->Render(p_shader);

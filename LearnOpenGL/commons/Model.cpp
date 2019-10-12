@@ -1,6 +1,8 @@
 ﻿#include "Model.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
+#include <iostream>
+#include "CommonUtils.h"
 
 void Model::LoadModel(std::string path)
 {
@@ -83,7 +85,6 @@ Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 			aiTextureType_DIFFUSE,
 			MeshTexture::TextureType::Diffuse
 		);
-
 		textures.insert(textures.end(), diffuseTextures.begin(), diffuseTextures.end());
 
 		std::vector<MeshTexture> specularTextures = LoadMaterialTextures(
@@ -91,13 +92,12 @@ Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 			aiTextureType_SPECULAR,
 			MeshTexture::TextureType::Specular
 		);
-
 		textures.insert(textures.end(), specularTextures.begin(), specularTextures.end());
 
 		std::vector<MeshTexture> normalTextures = LoadMaterialTextures(
 			material,
-			aiTextureType_SPECULAR,
-			MeshTexture::TextureType::Specular
+			aiTextureType_NORMALS,
+			MeshTexture::TextureType::Normal
 		);
 
 		textures.insert(textures.end(), normalTextures.begin(), normalTextures.end());
@@ -114,11 +114,12 @@ std::vector<MeshTexture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureT
 	{
 		aiString str;
 		mat->GetTexture(type, i, &str);
-		if(IsLoadedTexture(str.C_Str()))
+		std::string fullPath = CommonUtils::CombinePath(mModelPath, str.C_Str());
+		if (IsLoadedTexture(fullPath))
 		{
 			continue;
 		}
-		MeshTexture texture(str.C_Str(), meshTextureType);
+		MeshTexture texture(fullPath, meshTextureType);
 		textures.push_back(texture);
 		mTextureList.push_back(texture);
 	}
@@ -128,9 +129,9 @@ std::vector<MeshTexture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureT
 //参数指定的路径的纹理是否已经加载过
 bool Model::IsLoadedTexture(const std::string& path)
 {
-	for(size_t i = 0;i<mTextureList.size();++i)
+	for (size_t i = 0; i < mTextureList.size(); ++i)
 	{
-		if(mTextureList[i].Path == path)
+		if (mTextureList[i].Path == path)
 		{
 			return true;
 		}
