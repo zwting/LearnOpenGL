@@ -18,3 +18,22 @@
 3. [glad](https://glad.dav1d.de/)：提取opengl中的接口签名
 4. [assimp](http://www.assimp.org/)：加载3D模型开源库
 5. [glfw](https://www.glfw.org/)：OpenGL窗口，事件管理工具
+6. [idea imgui](https://github.com/ocornut/imgui/tree/docking)：一个IMGUI库，打算用来实现引擎编辑器
+
+### 大纲（以unity目标）
++ 引擎编辑器GUI（尚未开始）
+  + scene view: 场景编辑视口
+  + game view: 游戏运行视口
+  + console: 输出运行日志
+  + hierarchy: 层级面板，管理当前场景中的所有物体
+  + project: 项目面板，管理当前项目的所有文件
+  + inspector: 检视面板，显示当前选中的对象属性
+  + setting: 设置面板
++ 引擎核心
+  + 场景管理
+  + 内存管理
+  + 资源管理
+  + 动画模块
+  + 日志系统
+  + 渲染管线
+  + UI引擎
