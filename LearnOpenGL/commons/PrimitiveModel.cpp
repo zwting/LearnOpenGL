@@ -23,9 +23,17 @@ Model* PrimitiveModel::GetModel(PrimitiveType type)
 	switch (type)
 	{
 	case PrimitiveType::Cube:
-		static Model* model = new Model("resources/model/cube.obj");
-		cachedModel[type] = model;
-		break;
+		{
+			Model* model = new Model("resources/model/cube.obj");
+			cachedModel[type] = model;
+			break;
+		}
+	case PrimitiveType::Quad:
+		{
+			Model* model = new Model("resources/model/quad.obj");
+			cachedModel[type] = model;
+			break;
+		}
 	default:
 		return cachedModel[PrimitiveType::Cube];
 	}

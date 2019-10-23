@@ -178,6 +178,8 @@ echo d | xcopy /y /s $(ProjectDir)shaders $(TargetDir)shaders
     <ClCompile Include="third_part\src\glad.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\solidcolor.frag" />
+    <None Include="shaders\solidcolor.vert" />
     <None Include="shaders\triangle.frag" />
     <None Include="shaders\triangle.vert" />
     <None Include="third_part\include\assimp\color4.inl" />
@@ -623,6 +625,7 @@ echo d | xcopy /y /s $(ProjectDir)shaders $(TargetDir)shaders
   <ItemGroup>
     <Image Include="resources\texture\brick.jpg" />
     <Image Include="resources\texture\container.jpg" />
+    <Image Include="resources\texture\grass.png" />
     <Image Include="resources\texture\huaji.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

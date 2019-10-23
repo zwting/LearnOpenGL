@@ -3,6 +3,9 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include "../commons/Camera.h"
+
+const Shader* Shader::CurShader = nullptr;
 
 Shader::Shader(const char* vertexPath, const char* fragPath)
 {
@@ -93,6 +96,12 @@ void Shader::SetMat4vf(const char* variable, const GLfloat* val) const
 void Shader::Use() const
 {
 	glUseProgram(mProgram);
+	if (Camera::GetCurrent())
+	{
+		SetMat4vf("proj",VALUE_PTR(Camera::GetCurrent()->GetProjMatrix()));
+		SetMat4vf("view",VALUE_PTR(Camera::GetCurrent()->GetViewMatrix()));
+	}
+	Shader::CurShader = this;
 }
 
 

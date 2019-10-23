@@ -26,13 +26,12 @@ Texture::Texture(const GLchar* path, bool isFlipY)
 	this->mData = stbi_load(path, &mWidth, &mHeight, &mChannels, 0);
 	if (mData)
 	{
-
-		GLenum format;
+		GLenum format = GL_RGB;
 		if (mChannels == 1) format = GL_RED;
 		else if (mChannels == 3) format = GL_RGB;
 		else if (mChannels == 4) format = GL_RGBA;
-		
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, mWidth, mHeight, 0, format, GL_UNSIGNED_BYTE, mData);
+
+		glTexImage2D(GL_TEXTURE_2D, 0, format, mWidth, mHeight, 0, format, GL_UNSIGNED_BYTE, mData);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}

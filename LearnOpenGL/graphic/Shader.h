@@ -19,6 +19,8 @@ public:
 		return mProgram;
 	}
 
+	const static Shader* CurShader;
+
 private:
 	char mLogBuffer[256];
 

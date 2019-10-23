@@ -8,7 +8,8 @@ class PrimitiveModel
 public:
 	enum class PrimitiveType
 	{
-		Cube,
+		Cube, //立方体
+		Quad, //面片
 	};
 public:
 	static Node* CreatePrimitive(const PrimitiveType type);

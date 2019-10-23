@@ -23,5 +23,9 @@ void main()
 	vec3 normal = normalize(FragNormal);
 	float diffuse = max(dot(normal, lightDir), 0) * 0.5 + 0.5;
 
-	FragColor = vec4(c.rgb * diffuse, 1.0);
+
+	FragColor = vec4(c.rgb * diffuse,  1.0);
+	//float f = 100, n = 0.1;
+	//float depth = (2 * f * n / (f + n - gl_FragCoord.z * (f - n))) / f;
+	//FragColor = vec4(vec3(depth),1);
 }

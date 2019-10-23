@@ -150,7 +150,7 @@ public:
 
 	void LookAt(const vec3& target, const vec3& up = VEC3_UP);
 
-	void Render(Shader* shader)
+	void Render(const Shader* shader)
 	{
 		if(mpModel)
 		{

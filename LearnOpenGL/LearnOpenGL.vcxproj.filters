@@ -505,6 +505,12 @@
     <None Include="third_part\include\assimp\vector3.inl">
       <Filter>src\lib\assimp</Filter>
     </None>
+    <None Include="shaders\solidcolor.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\solidcolor.frag">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="commons\CommonUtils.h">
@@ -1404,6 +1410,9 @@
       <Filter>resources\texture</Filter>
     </Image>
     <Image Include="resources\texture\huaji.jpg">
+      <Filter>resources\texture</Filter>
+    </Image>
+    <Image Include="resources\texture\grass.png">
       <Filter>resources\texture</Filter>
     </Image>
   </ItemGroup>

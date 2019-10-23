@@ -21,7 +21,14 @@ private:
 	mat4x4 mViewMatrix{};
 	mat4x4 mProjMatrix{};
 
+	static Camera* s_Current;
+
 public:
+	static Camera* GetCurrent()
+	{
+		return s_Current;
+	}
+
 	Node* GetNode() const
 	{
 		return mNode;
@@ -47,10 +54,11 @@ public:
 		return mNode->GetRight();
 	}
 
-	vec3 GetForward()const
+	vec3 GetForward() const
 	{
 		return -mNode->GetForward();
 	}
+
 
 private:
 	void OnNodeDirty();
@@ -62,4 +70,5 @@ public:
 	void UpdateViewMatrix();
 	void LookAt(const vec3& target, const vec3& worldUp = VEC3_UP) const;
 	void Rotate(const quaternion& q);
+	void Active() { s_Current = this; }
 };
