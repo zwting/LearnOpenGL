@@ -5,13 +5,8 @@ std::map<PrimitiveModel::PrimitiveType, Model*> PrimitiveModel::cachedModel;
 Node* PrimitiveModel::CreatePrimitive(const PrimitiveType type)
 {
 	Node* ret = nullptr;
-	switch (type)
-	{
-	case PrimitiveType::Cube:
-		ret = new Node(VEC3_ZERO, QUA_IDENTITY);
-		ret->SetModel(GetModel(type));
-		break;
-	}
+	ret = new Node(VEC3_ZERO, QUA_IDENTITY);
+	ret->SetModel(GetModel(type));
 
 	return ret;
 }

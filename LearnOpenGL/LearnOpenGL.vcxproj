@@ -178,6 +178,7 @@ echo d | xcopy /y /s $(ProjectDir)shaders $(TargetDir)shaders
     <ClCompile Include="third_part\src\glad.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\grass.frag" />
     <None Include="shaders\solidcolor.frag" />
     <None Include="shaders\solidcolor.vert" />
     <None Include="shaders\triangle.frag" />

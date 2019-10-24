@@ -27,11 +27,11 @@ struct MeshTexture
 	TextureType Type;
 	std::string Path;
 
-	MeshTexture(std::string texturePath, TextureType textureType = TextureType::Diffuse)
+	MeshTexture(std::string texturePath, GLint wrapStyle = GL_REPEAT, TextureType textureType = TextureType::Diffuse)
 		: Type(textureType),
 		  Path(texturePath)
 	{
-		pTexture = new Texture(Path.c_str());
+		pTexture = new Texture(Path.c_str(), wrapStyle);
 	}
 };
 
@@ -45,7 +45,7 @@ public:
 
 	Mesh(const std::vector<Vertex>& vertices, std::vector<unsigned int>& indices, std::vector<MeshTexture> textures);
 	void Render(const Shader* shader);
-	void AddTexture(MeshTexture texture);
+	void AddTexture(const MeshTexture& texture);
 
 private:
 	unsigned int mVAO, mVBO, mEBO;

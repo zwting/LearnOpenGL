@@ -24,7 +24,7 @@ void Mesh::Render(const Shader* shader)
 	glBindVertexArray(0);
 }
 
-void Mesh::AddTexture(MeshTexture texture)
+void Mesh::AddTexture(const MeshTexture& texture)
 {
 	bool isFind = false;
 	for(size_t i = 0;i<mTextures.size();++i)

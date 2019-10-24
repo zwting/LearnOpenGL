@@ -47,7 +47,6 @@ int main()
 	InitAppData();
 
 
-
 	while (!glfwWindowShouldClose(g_win))
 	{
 		CommonUtils::s_time->UpdateTime(glfwGetTime());
@@ -86,7 +85,7 @@ void InitOpenGLData()
 void InitAppData()
 {
 	g_pCamera = new Camera(
-		vec3(0, 0, 5),
+		vec3(5, 2.5f, 5),
 		VEC3_ZERO,
 		45.0f,
 		static_cast<float>(SCREEN_WIDTH) / static_cast<float>(SCREEN_HEIGHT),
@@ -97,54 +96,66 @@ void InitAppData()
 	g_pCamera->Active();
 
 	vec3 cubePositions[] = {
-		vec3(0.0f, 0.0f, 0.0f),
-		vec3(2.0f, 5.0f, -15.0f),
-		vec3(-1.5f, -2.2f, -2.5f),
-		vec3(-3.8f, -2.0f, -12.3f),
-		vec3(2.4f, -0.4f, -3.5f),
-		vec3(-1.7f, 3.0f, -7.5f),
-		vec3(1.3f, -2.0f, -2.5f),
-		vec3(1.5f, 2.0f, -2.5f),
-		vec3(1.5f, 0.2f, -1.5f),
-		vec3(-1.3f, 1.0f, -1.5f)
+		vec3(-1.5f, 0, 0),
+		vec3(1.5f, 0, -2.5),
 	};
 
-	for (int i = 0; i < 10; ++i)
-	{
-		auto cube = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Cube);
-		cube->SetPosition(cubePositions[i]);
-		cube->SetRotation(glm::angleAxis(glm::radians((i + 1) * 20.0f), VEC3_ONE));
+	const auto meshTexture = MeshTexture("resources/texture/brick.jpg", GL_CLAMP_TO_EDGE);
+	const auto floorTexture = MeshTexture("resources/texture/metal.png", GL_CLAMP_TO_EDGE);
 
-		auto modelCube = cube->GetModel();
+	//创建一个地面
+	auto ground = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Quad);
+	ground->SetScale(vec3(35, 35, 1));
+	ground->SetPosition(0, -1, 0);
+	ground->SetRotation(glm::angleAxis(glm::radians(-90.0f), VEC3_RIGHT));
+	ground->GetModel()->GetMeshList()[0]->AddTexture(floorTexture);
+
+	nodeList.push_back(ground);
+
+	int size = sizeof(cubePositions) / sizeof(vec3);
+	for (int i = 0; i < size; ++i)
+	{
+		auto quad = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Cube);
+		cubePositions[i].y = 0;
+		quad->SetPosition(cubePositions[i]);
+
+		auto modelCube = quad->GetModel();
 		if (modelCube)
 		{
 			const auto meshes = modelCube->GetMeshList();
 			if (!meshes.empty())
 			{
-				meshes[0]->AddTexture(MeshTexture("resources/texture/brick.jpg"));
+				meshes[0]->AddTexture(meshTexture);
 			}
 		}
 
-		nodeList.push_back(cube);
+		nodeList.push_back(quad);
 	}
 
-	Model* soldier = new Model("resources/model/nanosuit/nanosuit.obj");
-	Node* node = new Node(VEC3_ZERO, QUA_IDENTITY);
-	node->SetModel(soldier);
-	node->SetScale(VEC3_ONE * 0.5f);
-	nodeList.push_back(node);
 
-	Node* plane = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Quad);
-	if(plane)
-	{
-		auto planeMode  = plane->GetModel();
-		if(planeMode)
-		{
-			planeMode->GetMeshList()[0]->AddTexture(MeshTexture("resources/texture/grass.png"));
-		}
-	}
+	//创建一坨草
+	
 
-	p_shader = new Shader("shaders/triangle.vert", "shaders/triangle.frag");
+	//
+	// Model* soldier = new Model("resources/model/nanosuit/nanosuit.obj");
+	// Node* node = new Node(VEC3_ZERO, QUA_IDENTITY);
+	// node->SetModel(soldier);
+	// node->SetScale(VEC3_ONE * 0.5f);
+	// nodeList.push_back(node);
+
+	// Node* plane = PrimitiveModel::CreatePrimitive(PrimitiveModel::PrimitiveType::Quad);
+	// nodeList.push_back(plane);
+	// plane->SetPosition(6,6,6);
+	// if(plane)
+	// {
+	// 	auto planeMode  = plane->GetModel();
+	// 	if(planeMode)
+	// 	{
+	// 		planeMode->GetMeshList()[0]->AddTexture(MeshTexture("resources/texture/grass.png"));
+	// 	}
+	// }
+
+	p_shader = new Shader("shaders/triangle.vert", "shaders/grass.frag");
 	p_solidColorShader = new Shader("shaders/solidcolor.vert", "shaders/solidcolor.frag");
 
 	p_shader->Use();
@@ -162,32 +173,11 @@ void InitAppData()
 //渲染
 void Render()
 {
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-	//渲染对象的同时填充模板
-	glStencilFunc(GL_ALWAYS, 1, 0xff);
-	glStencilMask(0xff);
-
 	p_shader->Use();
 	for (int i = 0; i < nodeList.size(); ++i)
 	{
-		nodeList[i]->SetScale(VEC3_ONE);
 		nodeList[i]->Render(Shader::CurShader);
 	}
-
-	//渲染描边, 不修改模板，关闭深度测试
-	glStencilFunc(GL_NOTEQUAL, 1, 0xff);
-	glStencilMask(0);
-	glDisable(GL_DEPTH_TEST);
-
-	p_solidColorShader->Use();
-
-	for (int i = 0; i < nodeList.size(); ++i)
-	{
-		nodeList[i]->SetScale(VEC3_ONE * 1.1f);
-		nodeList[i]->Render(Shader::CurShader);
-	}
-	glEnable(GL_DEPTH_TEST);
-	glStencilMask(0xff);
 }
 
 void Update(float dt)

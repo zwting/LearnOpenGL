@@ -36,11 +36,20 @@ private:
 	GLint mChannels;
 	GLuint mId;
 
+	GLint mWrapStyle;
+
 	void Free();
+	void CreateTextureInner(const GLchar* path, bool isFlipY);
 
 public:
+	Texture(const GLchar* path, GLint wrapStyle, bool isFlipY = true);
 	Texture(const GLchar* path, bool isFlipY = true);
 	~Texture();
 
-	void Use() { glBindTexture(GL_TEXTURE_2D, mId); }
+	void SetWrapStyle(GLint wrapStyle);
+
+	void Use()
+	{
+		glBindTexture(GL_TEXTURE_2D, mId);
+	}
 };

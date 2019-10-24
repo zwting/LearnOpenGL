@@ -119,7 +119,7 @@ std::vector<MeshTexture> Model::LoadMaterialTextures(aiMaterial* mat, aiTextureT
 		{
 			continue;
 		}
-		MeshTexture texture(fullPath, meshTextureType);
+		MeshTexture texture(fullPath, GL_REPEAT, meshTextureType);
 		textures.push_back(texture);
 		mTextureList.push_back(texture);
 	}
